@@ -1,12 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="glass-panel" style="max-width: 400px; margin: 4rem auto; text-align: center;">
-    <h2 style="margin-bottom: 2rem;"><i class="fa-solid fa-right-to-bracket"></i> Login</h2>
-    <form method="POST" class="auth-form">
-        <input type="email" name="email" placeholder="Email Address" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit" class="btn" style="width: 100%;"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
-    </form>
-    <p style="margin-top: 1.5rem; font-size: 0.9rem;">Don't have an account? <a href="{{ url_for('register') }}" style="color: var(--primary);">Register here</a></p>
+<div class="content-centered">
+    <div class="auth-container">
+        <div class="glass-panel" style="text-align: center;">
+            <div style="width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, var(--primary), #8b5cf6); color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem auto; box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.5);">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h2 style="margin-bottom: 2rem;">Welcome Back</h2>
+            <form method="POST" class="auth-form">
+                <input type="email" name="email" placeholder="Email Address" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" class="btn" style="width: 100%;"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+            </form>
+            <p style="margin-top: 2rem; font-size: 0.95rem;">Don't have an account? <a href="{{ url_for('register') }}" style="color: var(--primary); font-weight: 600; text-decoration: none;">Register here</a></p>
+        </div>
+    </div>
 </div>
 {% endblock %}
