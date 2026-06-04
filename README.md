@@ -1,166 +1,96 @@
-# 🎓 Grade Evaluator Web Application
+<div align="center">
+  <img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge" alt="Status" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" alt="Flask" />
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
 
-
-A simple Web Application built with Flask that allows users to input a numerical grade and receive a corresponding letter grade  or an "Invalid input" message if the grade is outside the 1-100 range. The app features a clean, responsive user interface styled with CSS.
-
----
-
-## 🌐 Live Demo
-
-## [Click Here](https://grade-evaluator.onrender.com) 🚀
-
-
----
-## ✨ Features
-
-* **Grade Calculation:** Converts numerical grades (1-100) into letter grades (A+ to F).
-* **Input Validation:** Checks for grades outside the valid range (1-100) and non-numerical inputs.
-* **User-Friendly Interface:** Simple form for grade submission.
-* **Responsive Design:** Styled with CSS for a visually appealing experience.
+  <h1>🎓 GradeEvaluator AI</h1>
+  <p><strong>A Premium Academic Tracking & AI Analytics Platform</strong></p>
+</div>
 
 ---
 
-## 🚀 Technologies Used
+## 🌟 Overview
 
-* **Backend:** Python (Flask)
-* **Frontend:** HTML, CSS
+**GradeEvaluator** is a modern, full-stack academic performance tracker designed for students who want deep insights into their academic trajectory. Moving beyond simple calculators, GradeEvaluator features a beautiful glassmorphic UI, robust data visualizations, and an integrated **AI Academic Advisor (GradeBot)** that provides personalized feedback, study plans, and grade improvement strategies.
 
----
+## ✨ Key Features
 
-## 📁 Project Structure
+- **📊 Comprehensive Dashboard:** Instantly view your Cumulative GPA, Average Scores, and Total Earned Credits.
+- **🤖 GradeBot AI:** An integrated, floating AI chatbot and report generator that analyzes your semester performance and offers actionable academic advice.
+- **🌓 Dynamic Dark Mode:** A stunning, system-aware dark/light theme engine that transforms the entire UI instantly.
+- **📈 Interactive Analytics:** Beautiful Chart.js integration showing score progression and grade distribution.
+- **🖨️ Professional Exporting:** One-click CSV exports and fully formatted, print-ready PDF official transcripts.
+- **📱 Responsive Design:** Flawless experience across desktop, tablet, and mobile devices.
 
-The project follows a standard Flask application layout:
+## 🛠️ Tech Stack
 
-```
+- **Backend:** Python, Flask, SQLite (SQLAlchemy)
+- **Frontend:** Vanilla JavaScript, HTML5, Vanilla CSS (Custom Design System)
+- **Data Visualization:** Chart.js
+- **AI Integration:** Google Gemini Pro API
 
-Grade/
-├── grade.py           Main Flask application logic
-├── README.md          Project documentation
-├── templates/
-│   └── index.html     HTML template for the web page
-└── static/
-    └── style.css      CSS stylesheet for styling
-
-
-````
-
----
-
-## ⚙️ Setup and Installation
-
-Follow these steps to get the Grade Evaluator running on your local machine.
+## 🚀 Getting Started
 
 ### Prerequisites
+- Python 3.8+
+- `pip` package manager
 
-* **Python 3.x** installed. Download from [python.org](https://www.python.org/downloads/).
-* **pip** package installer (usually included with Python).
+### Installation
 
-### Installation Steps
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/gemachistesfaye/GradeEvaluator.git
+   cd GradeEvaluator
+   ```
 
-1.  **Clone the repository (if applicable) or create the project structure** with the files as shown above.
-2.  **Navigate to the project directory:**
+2. **Create a virtual environment & install dependencies:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows use: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
 
-    ```bash
-    cd C:\Users\HP\OneDrive\Desktop\PHYTON\Grade
-    ```
-    (Adjust the path to your project location.)
+3. **Set up Environment Variables:**
+   Create a `.env` file in the root directory and add your API keys:
+   ```env
+   SECRET_KEY=your_secure_secret_key
+   GEMINI_API_KEY=your_gemini_api_key_here
+   ```
 
-3.  **(Optional but recommended) Create and activate a virtual environment:**
-    * **Create virtual environment:**
+4. **Initialize the Database:**
+   ```bash
+   python init_db.py
+   ```
 
-        ```bash
-        python -m venv venv
-        ```
-    * **Activate virtual environment:**
-        * On Windows:
+5. **Run the Application:**
+   ```bash
+   python run.py
+   ```
+   Navigate to `http://localhost:5000` in your browser.
 
-            ```bash
-            .\venv\Scripts\activate
-            ```
-        * On macOS/Linux:
+## 📸 Screenshots
 
-            ```bash
-            source venv/bin/activate
-            ```
+*(Replace these with actual repository screenshots)*
+| Dashboard Analytics | AI Academic Report |
+| :---: | :---: |
+| <img src="https://via.placeholder.com/600x400.png?text=Dashboard+Analytics" width="400"/> | <img src="https://via.placeholder.com/600x400.png?text=AI+Academic+Report" width="400"/> |
 
----
-
-
-## 📋 Requirements
-
-Alternatively, you can create a `requirements.txt` file in your project root with the following content:
-
-```text
-Flask
-````
-
-Then install dependencies using:
-
-```bash
-pip install -r requirements.txt
-```
-
-
----
-
-
-## ▶️ How to Run the Application
-
-1.  Ensure your virtual environment is activated (if you created one).
-
-2.  Run the Flask application from the root directory (`Grade` folder):
-
-    ```bash
-    python grade.py
-    ```
-
-3.  Open your browser and go to:
-    `http://127.0.0.1:5000/`
-
-4.  To stop the server, press `Ctrl + C` in your terminal.
-
-
----
-
-
-## 📝 Usage
-
-1.  Open the application in your web browser.
-2.  Enter a numerical grade between 1 and 100 in the input field.
-3.  Click the "Check Grade" button.
-4.  The corresponding letter grade or an error message will be displayed below the form.
-
-
----
-
+| Dark Mode UI | Print-Ready Transcript |
+| :---: | :---: |
+| <img src="https://via.placeholder.com/600x400.png?text=Dark+Mode+UI" width="400"/> | <img src="https://via.placeholder.com/600x400.png?text=PDF+Transcript" width="400"/> |
 
 ## 🤝 Contributing
 
-Feel free to fork this repository, make improvements and submit pull requests.
-  Your contributions are welcome!
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/gemachistesfaye/GradeEvaluator/issues). Please read our [Contributing Guidelines](.github/CONTRIBUTING.md) before submitting a PR.
 
+## 📄 License
 
+This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
 
------
+## 👨‍💻 About the Developer
 
-## 📬 Contact
-
-If you have any questions, issues, or suggestions, feel free to reach out. I'd love to hear from you\!
-
- * **[Open an Issue](https://github.com/urjiiko1/GradeEvaluator/issues) 💬**
-* **[LinkedIn](https://www.linkedin.com/in/gemachis-tesfaye-137196318) 👤**
-* **[Email](mailto:gemachistesfaye36@gmail.com) ✉️**
-* **[Telegram](https://t.me/urjiiko1) 📱**
-
-
-
----
-
-## 📅 Date of Completion
-
-This project was completed on: August 1, 2025 🗓️
-
-## 
-
-**By: Gemachis Tesfaye [https://github.com/urjiiko1] ✨**
-
+**Gemachis Tesfaye**  
+Full Stack Developer & AI Enthusiast  
+📧 Contact: gemachistesfaye36@gmail.com  
+🔗 GitHub: [@gemachistesfaye](https://github.com/gemachistesfaye)
