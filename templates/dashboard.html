@@ -129,15 +129,33 @@
 <!-- CHARTS SECTION -->
 {% if grades and grades|length > 0 %}
 <!-- AI FEEDBACK SECTION -->
-<div class="card" style="margin-bottom: 40px;">
-    <h3 style="font-size: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-        <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 16px;">🤖</div>
-        Latest Academic Advisor Report
-    </h3>
-    <div style="background: var(--bg-secondary); border: 1px solid var(--border); padding: 20px; border-radius: 12px; font-size: 14px; line-height: 1.6; color: var(--text-primary);">
-        {{ grades[0].ai_feedback | safe }}
+<div class="card" style="margin-bottom: 40px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(to right, var(--bg-secondary), var(--bg));">
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 24px;">🤖</div>
+        <div>
+            <h3 style="font-size: 16px; margin-bottom: 4px;">Latest Academic Advisor Report</h3>
+            <p style="color: var(--text-secondary); font-size: 13px; margin: 0;">GradeBot has analyzed your recent performance in <span style="font-weight: 600;">{{ grades[0].subject }}</span>.</p>
+        </div>
+    </div>
+    <button onclick="document.getElementById('aiReportModal').classList.add('active')" class="btn">View Full Report ✨</button>
+</div>
+
+<!-- AI REPORT MODAL -->
+<div id="aiReportModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 24px;">
+    <div class="card" style="width: 100%; max-width: 600px; max-height: 85vh; display: flex; flex-direction: column; padding: 0; overflow: hidden; position: relative; animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div style="padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-secondary);">
+            <h3 style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px;">🤖 AI Advisor Report</h3>
+            <button onclick="document.getElementById('aiReportModal').classList.remove('active')" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); transition: color 0.2s;">&times;</button>
+        </div>
+        <div style="padding: 24px; overflow-y: auto; line-height: 1.6; font-size: 15px; color: var(--text-primary);">
+            {{ grades[0].ai_feedback | safe }}
+        </div>
     </div>
 </div>
+<style>
+    #aiReportModal.active { display: flex !important; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px;">
     <div class="card">
