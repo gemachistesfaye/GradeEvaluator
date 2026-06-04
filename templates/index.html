@@ -1,14 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content-centered">
-    <div class="hero">
-        <div style="display: inline-block; padding: 0.5rem 1rem; background: var(--primary-light); color: var(--primary); border-radius: 999px; font-weight: 600; font-size: 0.85rem; margin-bottom: 1.5rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> Powered by Gemini AI</div>
-        <h1>Welcome to <span>GradeEvaluator</span></h1>
-        <p style="font-size: 1.25rem; max-width: 500px; margin: 0 auto 2.5rem auto; color: var(--text-muted);">Your personal academic coach. Track grades, analyze performance, and get instant, actionable feedback to reach your full potential.</p>
-        <div style="display: flex; gap: 1rem; justify-content: center;">
-            <a href="{{ url_for('register') }}" class="btn btn-lg" style="padding: 1rem 2rem; font-size: 1.1rem;"><i class="fa-solid fa-rocket"></i> Start for Free</a>
-            <a href="{{ url_for('login') }}" class="btn btn-lg" style="padding: 1rem 2rem; font-size: 1.1rem; background: #fff; color: var(--text-color); border: 1px solid var(--sidebar-border); box-shadow: var(--shadow-sm);"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
-        </div>
+
+<div style="text-align: center; padding: 60px 0;">
+    <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--primary-light); color: var(--primary); padding: 6px 16px; border-radius: 999px; font-weight: 600; font-size: 13px; margin-bottom: 24px;">
+        ✨ GradeEvaluator v2.0 is Here
+    </div>
+    <h1 style="font-size: 48px; font-weight: 800; color: var(--text-primary); margin-bottom: 16px; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.1;">
+        Your Personal AI <br> <span style="color: var(--primary);">Academic Coach.</span>
+    </h1>
+    <p style="font-size: 18px; color: var(--text-secondary); max-width: 600px; margin: 0 auto 32px auto;">
+        Evaluate your grades, track your cumulative GPA, and chat with an intelligent AI tutor to improve your academic performance.
+    </p>
+    <div style="display: flex; justify-content: center; gap: 16px;">
+        <a href="{{ url_for('register') }}" class="btn" style="padding: 14px 28px; font-size: 16px;">Get Started Free</a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline" style="padding: 14px 28px; font-size: 16px;">Sign In</a>
     </div>
 </div>
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px;">
+    <div class="card" style="text-align: center; padding: 32px 24px;">
+        <div style="font-size: 40px; margin-bottom: 16px;">📊</div>
+        <h3 style="font-size: 18px; margin-bottom: 8px;">Grade Tracking</h3>
+        <p style="color: var(--text-secondary); font-size: 14px;">Easily evaluate your numerical scores into letter grades and GPA points.</p>
+    </div>
+    <div class="card" style="text-align: center; padding: 32px 24px;">
+        <div style="font-size: 40px; margin-bottom: 16px;">🤖</div>
+        <h3 style="font-size: 18px; margin-bottom: 8px;">AI Feedback</h3>
+        <p style="color: var(--text-secondary); font-size: 14px;">Get instant, personalized feedback from GradeBot based on your performance.</p>
+    </div>
+    <div class="card" style="text-align: center; padding: 32px 24px;">
+        <div style="font-size: 40px; margin-bottom: 16px;">📈</div>
+        <h3 style="font-size: 18px; margin-bottom: 8px;">Beautiful Insights</h3>
+        <p style="color: var(--text-secondary); font-size: 14px;">Visualize your academic journey with interactive charts and GPA trends.</p>
+    </div>
+</div>
+
 {% endblock %}

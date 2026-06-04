@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,55 +17,44 @@
     <script src="{{ url_for('static', filename='charts.js') }}" defer></script>
 </head>
 <body>
-    <nav class="sidebar">
-        <div class="logo"><span class="icon">🎓</span> <span>GradeEvaluator</span></div>
-        <ul class="nav-links">
-            {% if session.user_id %}
-            <li><a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' else '' }}"><span class="icon">📊</span> Dashboard</a></li>
-            <li><a href="{{ url_for('history') }}" class="{{ 'active' if request.endpoint == 'history' else '' }}"><span class="icon">🕒</span> History</a></li>
-            <li><a href="{{ url_for('profile') }}" class="{{ 'active' if request.endpoint == 'profile' else '' }}"><span class="icon">👤</span> Profile</a></li>
-            <li><a href="{{ url_for('logout') }}"><span class="icon">🚪</span> Logout</a></li>
-            {% else %}
-            <li><a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}"><span class="icon">🏠</span> Home</a></li>
-            <li><a href="{{ url_for('login') }}" class="{{ 'active' if request.endpoint == 'login' else '' }}"><span class="icon">🔐</span> Login</a></li>
-            <li><a href="{{ url_for('register') }}" class="{{ 'active' if request.endpoint == 'register' else '' }}"><span class="icon">📝</span> Register</a></li>
-            {% endif %}
-        </ul>
-        <button id="darkToggle" class="dark-toggle">
-            <span id="darkIcon">🌙</span>
-            <span id="darkLabel">Dark Mode</span>
-        </button>
-        <div class="version-tag">v2.0</div>
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="nav-brand">
+                <span>🎓</span> GradeEvaluator
+            </a>
+            <div class="nav-links">
+                {% if session.user_id %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-ghost {{ 'active' if request.endpoint == 'dashboard' else '' }}">Dashboard</a>
+                <a href="{{ url_for('history') }}" class="btn btn-ghost {{ 'active' if request.endpoint == 'history' else '' }}">History</a>
+                <a href="{{ url_for('profile') }}" class="btn btn-ghost {{ 'active' if request.endpoint == 'profile' else '' }}">Profile</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm">Logout</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-ghost">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-sm">Get Started</a>
+                {% endif %}
+            </div>
+        </div>
     </nav>
-    <main class="content">
+
+    <!-- Main Content -->
+    <main class="container" style="padding-top: 40px; padding-bottom: 60px;">
+        <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-        {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">{{ message }}</div>
-        {% endfor %}
+        <div style="max-width: 600px; margin: 0 auto 24px auto;">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
         {% endif %}
         {% endwith %}
+
+        <!-- Page Content -->
         {% block content %}{% endblock %}
     </main>
+
     <script>
-    // Dark mode toggle
-    function toggleDark() {
-        const html = document.documentElement;
-        const isDark = html.getAttribute('data-theme') === 'dark';
-        const newTheme = isDark ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        document.getElementById('darkIcon').textContent = newTheme === 'dark' ? '☀️' : '🌙';
-        document.getElementById('darkLabel').textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
-    }
-    document.getElementById('darkToggle').addEventListener('click', toggleDark);
-    // Load saved theme
-    const saved = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', saved);
-    if (saved === 'dark') {
-        document.getElementById('darkIcon').textContent = '☀️';
-        document.getElementById('darkLabel').textContent = 'Light Mode';
-    }
     // Auto-dismiss alerts
     setTimeout(() => {
         document.querySelectorAll('.alert').forEach(a => {

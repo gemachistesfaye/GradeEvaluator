@@ -1,20 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content-centered">
-    <div class="auth-container">
-        <div class="glass-panel" style="text-align: center;">
-            <div style="width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, var(--primary), #f59e0b); color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem auto; box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.5);">
-                <i class="fa-solid fa-user-plus"></i>
+
+<div style="max-width: 400px; margin: 40px auto; text-align: center;">
+    <div style="font-size: 48px; margin-bottom: 16px;">🚀</div>
+    <h1 style="font-size: 28px; margin-bottom: 8px;">Create an Account</h1>
+    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 32px;">Start tracking your grades and get AI coaching.</p>
+
+    <div class="card" style="text-align: left; padding: 32px;">
+        <form method="POST">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" placeholder="John Doe" required>
             </div>
-            <h2 style="margin-bottom: 2rem;">Create Account</h2>
-            <form method="POST" class="auth-form">
-                <input type="text" name="name" placeholder="Full Name" required>
-                <input type="email" name="email" placeholder="Email Address" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <button type="submit" class="btn" style="width: 100%;"><i class="fa-solid fa-user-plus"></i> Register</button>
-            </form>
-            <p style="margin-top: 2rem; font-size: 0.95rem;">Already have an account? <a href="{{ url_for('login') }}" style="color: var(--primary); font-weight: 600; text-decoration: none;">Login here</a></p>
-        </div>
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" placeholder="Create a strong password" required>
+            </div>
+            <button type="submit" class="btn" style="width: 100%; margin-top: 8px; padding: 12px;">Sign Up</button>
+        </form>
     </div>
+    
+    <p style="margin-top: 24px; font-size: 14px; color: var(--text-secondary);">
+        Already have an account? <a href="{{ url_for('login') }}" style="font-weight: 600;">Sign in</a>
+    </p>
 </div>
+
 {% endblock %}

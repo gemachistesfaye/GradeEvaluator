@@ -19,6 +19,7 @@ def init_db():
                 joined_date TEXT NOT NULL
             )
         ''')
+        # Include credits column with default 3
         conn.execute('''
             CREATE TABLE IF NOT EXISTS grades (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,6 +30,7 @@ def init_db():
                 gpa_points REAL NOT NULL,
                 ai_feedback TEXT,
                 date TEXT NOT NULL,
+                credits INTEGER NOT NULL DEFAULT 3,
                 FOREIGN KEY(student_id) REFERENCES students(id)
             )
         ''')
@@ -65,13 +67,25 @@ def get_grade_count(user_id):
         count = conn.execute("SELECT COUNT(*) FROM grades WHERE student_id = ?", (user_id,)).fetchone()
         return count[0] if count else 0
 
-def add_grade(student_id, subject, score, letter_grade, gpa_points, ai_feedback):
+# Updated add_grade with credits parameter and graceful handling of missing column
+def add_grade(student_id, subject, score, letter_grade, gpa_points, ai_feedback, credits=3):
     date_str = datetime.now().strftime("%B %d, %Y")
     with get_db() as conn:
-        conn.execute(
-            "INSERT INTO grades (student_id, subject, score, letter_grade, gpa_points, ai_feedback, date) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (student_id, subject, score, letter_grade, gpa_points, ai_feedback, date_str)
-        )
+        try:
+            conn.execute(
+                "INSERT INTO grades (student_id, subject, score, letter_grade, gpa_points, ai_feedback, date, credits) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (student_id, subject, score, letter_grade, gpa_points, ai_feedback, date_str, credits)
+            )
+        except sqlite3.OperationalError as e:
+            # If credits column missing, add it then retry
+            if "no such column: credits" in str(e):
+                conn.execute('ALTER TABLE grades ADD COLUMN credits INTEGER NOT NULL DEFAULT 3')
+                conn.execute(
+                    "INSERT INTO grades (student_id, subject, score, letter_grade, gpa_points, ai_feedback, date, credits) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (student_id, subject, score, letter_grade, gpa_points, ai_feedback, date_str, credits)
+                )
+            else:
+                raise
         conn.commit()
 
 def get_grades_by_student(student_id):

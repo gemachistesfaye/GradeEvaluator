@@ -21,6 +21,18 @@ app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-secret")
 init_db()
 
+def calculate_cumulative_gpa(grades):
+    if not grades:
+        return 0.0
+    total_points = sum(
+        g["gpa_points"] * g.get("credits", 3)
+        for g in grades
+    )
+    total_credits = sum(g.get("credits", 3) for g in grades)
+    if total_credits == 0:
+        return 0.0
+    return round(total_points / total_credits, 2)
+
 def get_grade_info(score):
     if score >= 90:
         return "A+", 4.0
@@ -108,6 +120,7 @@ def dashboard():
     user_id = session["user_id"]
     if request.method == "POST":
         subject = request.form.get("subject", "General").strip()
+        credits = request.form.get("credits", 3, type=int)
         try:
             score = float(request.form["grade"])
             if score < 0 or score > 100:
@@ -118,12 +131,36 @@ def dashboard():
                 ai_feedback = generate_ai_feedback(
                     session["user_name"], subject, score, letter_grade, gpa_points, date_str
                 )
-                add_grade(user_id, subject, score, letter_grade, gpa_points, ai_feedback)
+                add_grade(user_id, subject, score, letter_grade, gpa_points, ai_feedback, credits=credits)
                 flash("Grade evaluated and saved!", "success")
         except ValueError:
             flash("Please enter a valid number.", "danger")
     grades = get_grades_by_student(user_id)
-    return render_template("dashboard.html", grades=grades, name=session["user_name"])
+    return render_template("dashboard.html", grades=grades, name=session["user_name"], cumulative_gpa=calculate_cumulative_gpa(grades))
+
+@app.route("/chat", methods=["POST"])
+def chat():
+    if "user_id" not in session:
+        return {"reply": "Please log in first!"}, 403
+    
+    data = request.get_json()
+    message = data.get("message")
+    grade_id = data.get("grade_id")
+    conversation = data.get("conversation", [])
+    
+    grades = get_grades_by_student(session["user_id"])
+    target_grade = next((g for g in grades if g["id"] == grade_id), None)
+    
+    if not target_grade:
+        return {"reply": "Grade not found."}, 404
+        
+    reply = generate_chat_reply(
+        session["user_name"], target_grade["subject"],
+        target_grade["score"], target_grade["letter_grade"],
+        target_grade["gpa_points"], target_grade["date"],
+        conversation, message
+    )
+    return {"reply": reply}
 
 @app.route("/history")
 def history():
