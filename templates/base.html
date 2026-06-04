@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,57 +7,35 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Favicon (emoji) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+    <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='charts.js') }}" defer></script>
 </head>
-
 <body>
     <nav class="sidebar">
-        <div class="logo"><i class="fa-solid fa-graduation-cap" style="color: var(--primary);"></i> GradeEvaluator</div>
-        <ul>
+        <div class="logo"><span class="icon">🎓</span> <span>GradeEvaluator</span></div>
+        <ul class="nav-links">
             {% if session.user_id %}
-            <li>
-              <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' else '' }}">
-                <i class="fa-solid fa-chart-pie"></i> Dashboard
-              </a>
-            </li>
-            <li>
-              <a href="{{ url_for('history') }}" class="{{ 'active' if request.endpoint == 'history' else '' }}">
-                <i class="fa-solid fa-clock-rotate-left"></i> History
-              </a>
-            </li>
-            <li>
-              <a href="{{ url_for('profile') }}" class="{{ 'active' if request.endpoint == 'profile' else '' }}">
-                <i class="fa-solid fa-user"></i> Profile
-              </a>
-            </li>
-            <li><a href="{{ url_for('logout') }}"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></li>
+            <li><a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' else '' }}"><span class="icon">📊</span> Dashboard</a></li>
+            <li><a href="{{ url_for('history') }}" class="{{ 'active' if request.endpoint == 'history' else '' }}"><span class="icon">🕒</span> History</a></li>
+            <li><a href="{{ url_for('profile') }}" class="{{ 'active' if request.endpoint == 'profile' else '' }}"><span class="icon">👤</span> Profile</a></li>
+            <li><a href="{{ url_for('logout') }}"><span class="icon">🚪</span> Logout</a></li>
             {% else %}
-            <li>
-              <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}">
-                <i class="fa-solid fa-house"></i> Home
-              </a>
-            </li>
-            <li>
-              <a href="{{ url_for('login') }}" class="{{ 'active' if request.endpoint == 'login' else '' }}">
-                <i class="fa-solid fa-right-to-bracket"></i> Login
-              </a>
-            </li>
-            <li>
-              <a href="{{ url_for('register') }}" class="{{ 'active' if request.endpoint == 'register' else '' }}">
-                <i class="fa-solid fa-user-plus"></i> Register
-              </a>
-            </li>
+            <li><a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}"><span class="icon">🏠</span> Home</a></li>
+            <li><a href="{{ url_for('login') }}" class="{{ 'active' if request.endpoint == 'login' else '' }}"><span class="icon">🔐</span> Login</a></li>
+            <li><a href="{{ url_for('register') }}" class="{{ 'active' if request.endpoint == 'register' else '' }}"><span class="icon">📝</span> Register</a></li>
             {% endif %}
         </ul>
-        <button id="darkToggle" onclick="toggleDark()">
-          <i class="fa-solid fa-moon"></i> Dark Mode
+        <button id="darkToggle" class="dark-toggle">
+            <span id="darkIcon">🌙</span>
+            <span id="darkLabel">Dark Mode</span>
         </button>
+        <div class="version-tag">v2.0</div>
     </nav>
     <main class="content">
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -71,23 +48,32 @@
         {% block content %}{% endblock %}
     </main>
     <script>
+    // Dark mode toggle
     function toggleDark() {
         const html = document.documentElement;
         const isDark = html.getAttribute('data-theme') === 'dark';
-        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        localStorage.setItem('theme', isDark ? 'light' : 'dark');
-        const icon = document.querySelector('#darkToggle i');
-        icon.className = isDark ? 
-          'fa-solid fa-moon' : 'fa-solid fa-sun';
+        const newTheme = isDark ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        document.getElementById('darkIcon').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        document.getElementById('darkLabel').textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
     }
-    // Load saved theme on page load
+    document.getElementById('darkToggle').addEventListener('click', toggleDark);
+    // Load saved theme
     const saved = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', saved);
     if (saved === 'dark') {
-        document.querySelector('#darkToggle i').className = 
-          'fa-solid fa-sun';
+        document.getElementById('darkIcon').textContent = '☀️';
+        document.getElementById('darkLabel').textContent = 'Light Mode';
     }
+    // Auto-dismiss alerts
+    setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(a => {
+            a.style.transition = 'opacity 0.5s ease';
+            a.style.opacity = '0';
+            setTimeout(() => a.remove(), 500);
+        });
+    }, 4000);
     </script>
 </body>
-
 </html>

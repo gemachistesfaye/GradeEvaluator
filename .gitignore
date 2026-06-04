@@ -1,23 +1,17 @@
+# Environment & virtual‑env
 .env
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
 env/
 venv/
-*.sqlite
-*.db
-.DS_Store
-.idea/
-.vscode/
+
+# Python byte‑code caches
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-env/
-venv/
+*.py[cod]
+
+# SQLite files (local DB)
 *.sqlite
 *.db
+
+# OS / IDE artefacts
 .DS_Store
 .idea/
 .vscode/
