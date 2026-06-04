@@ -165,7 +165,8 @@ def generate_report():
         flash("No grades to analyze.", "warning")
         return redirect(url_for("dashboard"))
         
-    grades_summary = "\n".join([f"- {g['subject']}: {g['score']}/100 ({g['letter_grade']}), {g.get('credits', 3)} credits" for g in grades])
+    cumulative_gpa = calculate_cumulative_gpa(grades)
+    grades_summary = f"Actual Cumulative GPA: {cumulative_gpa}\n" + "\n".join([f"- {g['subject']}: {g['score']}/100 ({g['letter_grade']}), {g.get('credits', 3)} credits" for g in grades])
     date_str = datetime.datetime.now().strftime("%B %d, %Y")
     
     from ai_feedback import generate_semester_report
