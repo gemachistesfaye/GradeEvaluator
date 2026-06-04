@@ -1,8 +1,97 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container" style="max-width:600px;margin:auto;padding:24px;">
-  <h2 style="font-size:24px;color:var(--text-primary);margin-bottom:16px;">Settings</h2>
-  <p style="color:var(--text-secondary);">This page will host user preferences, theme options, and other configuration settings. Feel free to customize it.</p>
-  <a href="{{ url_for('dashboard') }}" class="btn" style="margin-top:24px;">Back to Dashboard</a>
+
+<style>
+    .settings-card {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 40px;
+        background: #ffffff;
+        border-radius: 24px;
+        border: 1px solid var(--border, #e5e7eb);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    }
+
+    .settings-section {
+        margin-bottom: 32px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--border, #e5e7eb);
+    }
+
+    .settings-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .settings-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-primary, #111827);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .toggle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+    }
+
+    .toggle-label {
+        font-size: 14px;
+        color: var(--text-secondary, #4b5563);
+    }
+</style>
+
+<div class="settings-card">
+    <h2 style="margin: 0 0 8px 0; font-size: 24px; color: var(--text-primary, #111827);">Account Settings</h2>
+    <p style="color: var(--text-secondary, #6b7280); margin-bottom: 32px;">Manage your preferences and platform configuration.</p>
+
+    <form method="POST">
+        <!-- Notification Section -->
+        <div class="settings-section">
+            <h3 class="settings-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                Notifications
+            </h3>
+            <div class="toggle-row">
+                <span class="toggle-label">Email updates</span>
+                <input type="checkbox" name="email_notifs" checked>
+            </div>
+            <div class="toggle-row">
+                <span class="toggle-label">Academic alerts</span>
+                <input type="checkbox" name="academic_alerts" checked>
+            </div>
+        </div>
+
+        <!-- Appearance Section -->
+        <div class="settings-section">
+            <h3 class="settings-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                Appearance
+            </h3>
+            <div class="form-group">
+                <label style="font-size: 13px; font-weight: 600; color: var(--text-secondary, #4b5563);">Theme</label>
+                <select name="theme" class="form-input" style="margin-top: 8px;">
+                    <option value="light">Light Mode</option>
+                    <option value="dark">Dark Mode</option>
+                    <option value="system">System Default</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 16px;">
+            Save Preferences
+        </button>
+    </form>
+    
+    <div style="margin-top: 32px; text-align: center;">
+        <a href="{{ url_for('dashboard') }}" style="color: var(--text-secondary, #6b7280); font-size: 14px; text-decoration: underline;">Back to Dashboard</a>
+    </div>
 </div>
+
 {% endblock %}

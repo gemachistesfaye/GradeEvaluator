@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .notif-page {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0 24px 60px;
+    }
+
+    .notif-page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        padding-top: 8px;
+    }
+
+    .notif-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--text-primary, #111827);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+    }
+
+    .notif-badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: var(--primary, #6366f1);
+        color: white;
+    }
+
+    .notif-btn {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--border, #e5e7eb);
+        background: white;
+        color: var(--text-secondary, #6b7280);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .notif-btn:hover {
+        background: var(--bg-secondary, #f9fafb);
+        color: var(--text-primary, #111827);
+    }
+
+    .notif-tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--bg-secondary, #f3f4f6);
+        border-radius: 10px;
+        padding: 4px;
+        margin-bottom: 20px;
+    }
+
+    .notif-tab {
+        flex: 1;
+        text-align: center;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 7px;
+        cursor: pointer;
+        color: var(--text-secondary, #6b7280);
+        border: none;
+        background: transparent;
+        transition: all 0.2s ease;
+    }
+
+    .notif-tab.active {
+        background: white;
+        color: var(--primary, #6366f1);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .notif-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .notif-group-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-tertiary, #9ca3af);
+        padding: 16px 0 8px;
+    }
+
+    .notif-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 16px 18px;
+        border-radius: 12px;
+        background: white;
+        border: 1px solid var(--border, #e5e7eb);
+        transition: background 0.15s ease, box-shadow 0.15s ease;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .notif-item:hover { background: #f9fafb; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .notif-item.unread { border-left: 3px solid var(--primary, #6366f1); background: rgba(99,102,241,0.02); }
+    .notif-item.unread:hover { background: rgba(99,102,241,0.04); }
+
+    .notif-icon-wrap {
+        width: 40px; height: 40px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .notif-icon-wrap.ai     { background: rgba(99,102,241,0.1); color: #6366f1; }
+    .notif-icon-wrap.grade  { background: rgba(16,185,129,0.1);  color: #10b981; }
+    .notif-icon-wrap.alert  { background: rgba(245,158,11,0.1);  color: #f59e0b; }
+    .notif-icon-wrap.system { background: rgba(107,114,128,0.1); color: #6b7280; }
+    .notif-icon-wrap.tip    { background: rgba(59,130,246,0.1);  color: #3b82f6; }
+
+    .notif-body { flex: 1; min-width: 0; }
+    .notif-subject { font-size: 14px; font-weight: 700; color: var(--text-primary, #111827); margin-bottom: 3px; }
+    .notif-desc   { font-size: 13px; color: var(--text-secondary, #6b7280); line-height: 1.45; }
+    .notif-meta   { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-shrink: 0; }
+    .notif-time   { font-size: 11px; color: var(--text-tertiary, #9ca3af); white-space: nowrap; }
+    .notif-dot    { width: 8px; height: 8px; background: var(--primary, #6366f1); border-radius: 50%; flex-shrink: 0; }
+
+    .notif-empty {
+        text-align: center; padding: 64px 32px; border-radius: 16px;
+        background: white; border: 1px dashed var(--border, #e5e7eb);
+    }
+    .notif-empty h4 { font-size: 16px; font-weight: 700; color: var(--text-primary, #111827); margin: 16px 0 6px; }
+    .notif-empty p  { font-size: 13px; color: var(--text-tertiary, #9ca3af); margin: 0; }
+</style>
+
+<div class="notif-page">
+
+    <!-- PAGE HEADER -->
+    <div class="notif-page-header">
+        <h2 class="notif-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            Notifications
+            <span class="notif-badge" id="unreadBadge" style="display:none;">0</span>
+        </h2>
+        <div style="display:flex; gap:10px;">
+            <button class="notif-btn" onclick="markAllRead()">Mark all read</button>
+        </div>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="filterTab(this,'all')">All</button>
+        <button class="notif-tab" onclick="filterTab(this,'ai')">AI Reports</button>
+        <button class="notif-tab" onclick="filterTab(this,'grade')">Grades</button>
+        <button class="notif-tab" onclick="filterTab(this,'system')">System</button>
+    </div>
+
+    <!-- NOTIFICATION LIST -->
+    <div class="notif-list" id="notifList">
+
+        {% if notifications and notifications|length > 0 %}
+            <div class="notif-group-label">Notifications</div>
+            {% for n in notifications %}
+            <div class="notif-item {% if not n.read %}unread{% endif %}" data-type="{{ n.type | default('system') }}" onclick="markRead(this)">
+                <div class="notif-icon-wrap {{ n.type | default('system') }}">
+                    {% if n.type == 'ai' %}
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                    {% elif n.type == 'grade' %}
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    {% else %}
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                    {% endif %}
+                </div>
+                <div class="notif-body">
+                    <div class="notif-subject">{{ n.title }}</div>
+                    <div class="notif-desc">{{ n.message }}</div>
+                </div>
+                <div class="notif-meta">
+                    <span class="notif-time">{{ n.timestamp | default('') }}</span>
+                    {% if not n.read %}<div class="notif-dot"></div>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+
+        {% else %}
+        <!-- DEMO CARDS shown when no backend notifications exist yet -->
+        <div class="notif-group-label">Today</div>
+
+        <div class="notif-item unread" data-type="ai" onclick="markRead(this)">
+            <div class="notif-icon-wrap ai">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            </div>
+            <div class="notif-body">
+                <div class="notif-subject">AI Analysis Ready</div>
+                <div class="notif-desc">Your semester performance report has been generated. Review your CGPA trends and improvement tips.</div>
+            </div>
+            <div class="notif-meta">
+                <span class="notif-time">2m ago</span>
+                <div class="notif-dot"></div>
+            </div>
+        </div>
+
+        <div class="notif-item unread" data-type="grade" onclick="markRead(this)">
+            <div class="notif-icon-wrap grade">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div class="notif-body">
+                <div class="notif-subject">Grade Saved — Calculus 2</div>
+                <div class="notif-desc">Score 78/100 (B+) was saved successfully. Your CGPA has been updated.</div>
+            </div>
+            <div class="notif-meta">
+                <span class="notif-time">15m ago</span>
+                <div class="notif-dot"></div>
+            </div>
+        </div>
+
+        <div class="notif-item" data-type="tip" onclick="markRead(this)">
+            <div class="notif-icon-wrap tip">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            </div>
+            <div class="notif-body">
+                <div class="notif-subject">Study Tip of the Day</div>
+                <div class="notif-desc">Spacing your study sessions across multiple days leads to 40% better retention than cramming.</div>
+            </div>
+            <div class="notif-meta">
+                <span class="notif-time">1h ago</span>
+            </div>
+        </div>
+
+        <div class="notif-group-label">Yesterday</div>
+
+        <div class="notif-item" data-type="system" onclick="markRead(this)">
+            <div class="notif-icon-wrap system">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+            </div>
+            <div class="notif-body">
+                <div class="notif-subject">Welcome to GradeEvaluator</div>
+                <div class="notif-desc">Your account is fully set up. Start adding grades to unlock AI-powered insights.</div>
+            </div>
+            <div class="notif-meta">
+                <span class="notif-time">Yesterday</span>
+            </div>
+        </div>
+
+        <div class="notif-item" data-type="ai" onclick="markRead(this)">
+            <div class="notif-icon-wrap ai">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            </div>
+            <div class="notif-body">
+                <div class="notif-subject">GradeBot is Ready</div>
+                <div class="notif-desc">Your AI academic advisor is live on the dashboard. Click the chat button to ask about your grades.</div>
+            </div>
+            <div class="notif-meta">
+                <span class="notif-time">Yesterday</span>
+            </div>
+        </div>
+
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    updateBadge();
+});
+
+function updateBadge() {
+    const count = document.querySelectorAll('.notif-item.unread').length;
+    const badge = document.getElementById('unreadBadge');
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline-block';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function markRead(el) {
+    el.classList.remove('unread');
+    const dot = el.querySelector('.notif-dot');
+    if (dot) dot.remove();
+    updateBadge();
+}
+
+function markAllRead() {
+    document.querySelectorAll('.notif-item.unread').forEach(el => {
+        el.classList.remove('unread');
+        const dot = el.querySelector('.notif-dot');
+        if (dot) dot.remove();
+    });
+    updateBadge();
+}
+
+function filterTab(btn, type) {
+    document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.notif-item').forEach(item => {
+        item.style.display = (type === 'all' || item.dataset.type === type) ? 'flex' : 'none';
+    });
+}
+</script>
+
+{% endblock %}
