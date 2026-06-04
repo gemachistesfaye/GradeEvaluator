@@ -413,11 +413,19 @@
                         </a>
 
                         <!-- Consolidated Quick GPA Calculator -->
-                        <a href="#" class="profile-menu-item" onclick="document.getElementById('globalGpaModal').style.display='flex'; document.getElementById('profileMenu').classList.remove('active'); return false;">
+                        <a href="#" class="profile-menu-item" onclick="openGlobalModal('globalGpaModal'); return false;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 2l4 8h8l-6 6 2 8L12 16l-5.5 4 2-7L3 9h7z"/>
                             </svg>
                             Quick GPA Calculator
+                        </a>
+
+                        <!-- Export Grades Option -->
+                        <a href="{{ url_for('export_pdf') }}" class="profile-menu-item">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/>
+                            </svg>
+                            Export Grades (PDF)
                         </a>
 
                         <!-- Consolidated Global Settings -->
@@ -429,8 +437,16 @@
                             Global Settings
                         </a>
 
+                        <!-- Theme Settings Option -->
+                        <a href="{{ url_for('settings') }}" class="profile-menu-item">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                            </svg>
+                            Theme Preferences
+                        </a>
+
                         <!-- Consolidated Help Option -->
-                        <a href="#" class="profile-menu-item" onclick="document.getElementById('globalHelpModal').style.display='flex'; document.getElementById('profileMenu').classList.remove('active'); return false;">
+                        <a href="#" class="profile-menu-item" onclick="openGlobalModal('globalHelpModal'); return false;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="16"/><path d="M12 12a2 2 0 1 0-2-2"/>
                             </svg>
@@ -488,7 +504,7 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary, #6366f1);"><path d="M12 2l4 8h8l-6 6 2 8L12 16l-5.5 4 2-7L3 9h7z"/></svg>
                     Quick GPA Calculator
                 </h3>
-                <button onclick="document.getElementById('globalGpaModal').style.display='none'" style="background: none; border: none; font-size: 20px; color: var(--text-secondary, #6b7280); cursor: pointer;">&times;</button>
+                <button onclick="closeGlobalModal('globalGpaModal')" style="background: none; border: none; font-size: 20px; color: var(--text-secondary, #6b7280); cursor: pointer;">&times;</button>
             </div>
             <div style="margin-bottom: 20px;">
                 <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary, #4b5563); margin-bottom: 8px;">Current GPA</label>
@@ -511,7 +527,7 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary, #6366f1);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="16"/><path d="M12 12a2 2 0 1 0-2-2"/></svg>
                     Academic Help & Resources
                 </h3>
-                <button onclick="document.getElementById('globalHelpModal').style.display='none'" style="background: none; border: none; font-size: 20px; color: var(--text-secondary, #6b7280); cursor: pointer;">&times;</button>
+                <button onclick="closeGlobalModal('globalHelpModal')" style="background: none; border: none; font-size: 20px; color: var(--text-secondary, #6b7280); cursor: pointer;">&times;</button>
             </div>
             <div style="line-height: 1.6; color: var(--text-secondary, #4b5563); font-size: 14px;">
                 <p>Welcome to <strong>GradeEvaluator</strong>! Here are a few tips to maximize your academic performance:</p>
@@ -521,7 +537,7 @@
                     <li><strong>Goal Setting:</strong> Use the Quick GPA Calculator to figure out what scores you need to hit your target CGPA.</li>
                 </ul>
             </div>
-            <button class="btn" style="width: 100%; justify-content: center; background: var(--bg-secondary, #f3f4f6); color: var(--text-primary, #111827); padding: 12px; border-radius: 8px; font-weight: 600; margin-top: 24px; border: 1px solid var(--border, #e5e7eb); cursor: pointer;" onclick="document.getElementById('globalHelpModal').style.display='none'">Got it, thanks!</button>
+            <button class="btn" style="width: 100%; justify-content: center; background: var(--bg-secondary, #f3f4f6); color: var(--text-primary, #111827); padding: 12px; border-radius: 8px; font-weight: 600; margin-top: 24px; border: 1px solid var(--border, #e5e7eb); cursor: pointer;" onclick="closeGlobalModal('globalHelpModal')">Got it, thanks!</button>
         </div>
     </div>
 
@@ -559,15 +575,31 @@
     }
 
     // Modal control utility functions
+    window.openGlobalModal = function(id) {
+        document.getElementById(id).style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevents background scrolling
+        const profileMenu = document.getElementById('profileMenu');
+        if (profileMenu) profileMenu.classList.remove('active');
+    };
+
+    window.closeGlobalModal = function(id) {
+        document.getElementById(id).style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restores background scrolling
+    };
+
     window.openConfirmModal = function(title, message, href) {
         document.getElementById('confirmTitle').textContent = title;
         document.getElementById('confirmMessage').textContent = message;
         document.getElementById('confirmActionBtn').href = href;
         document.getElementById('confirmModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevents background scrolling
+        const profileMenu = document.getElementById('profileMenu');
+        if (profileMenu) profileMenu.classList.remove('active');
     };
 
     window.closeConfirmModal = function() {
         document.getElementById('confirmModal').style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restores background scrolling
     };
 
     // Self-dismissing page flash alerts
