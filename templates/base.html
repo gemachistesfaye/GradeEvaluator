@@ -324,6 +324,67 @@
                 display: block !important;
             }
         }
+
+        /* Dark Theme Global Overrides */
+        body.dark-theme {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            background-color: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
+        }
+        body.dark-theme .card, 
+        body.dark-theme .navbar, 
+        body.dark-theme .notif-item,
+        body.dark-theme .profile-menu,
+        body.dark-theme .profile-card,
+        body.dark-theme .settings-card,
+        body.dark-theme .profile-menu-header,
+        body.dark-theme #globalGpaModal .card,
+        body.dark-theme #globalHelpModal .card,
+        body.dark-theme #globalThemeModal .card,
+        body.dark-theme #confirmModal .card {
+            background: var(--bg-secondary) !important;
+            border-color: var(--border) !important;
+            color: var(--text-primary) !important;
+        }
+        body.dark-theme h1, body.dark-theme h2, body.dark-theme h3, body.dark-theme h4 {
+            color: var(--text-primary) !important;
+        }
+        body.dark-theme p, body.dark-theme label, body.dark-theme .nav-icon {
+            color: var(--text-secondary) !important;
+        }
+        body.dark-theme input, 
+        body.dark-theme select,
+        body.dark-theme .form-input {
+            background: #334155 !important;
+            color: #f8fafc !important;
+            border-color: #475569 !important;
+        }
+        body.dark-theme .nav-search-input {
+            background: rgba(255,255,255,0.05) !important;
+            color: #ffffff !important;
+            border-color: rgba(255,255,255,0.1) !important;
+        }
+        body.dark-theme .nav-link {
+            color: var(--text-secondary) !important;
+        }
+        body.dark-theme .nav-link:hover, body.dark-theme .nav-link.active {
+            color: var(--primary, #818cf8) !important;
+            background: rgba(99, 102, 241, 0.15) !important;
+        }
+        body.dark-theme .btn-outline {
+            border-color: var(--border) !important;
+            color: var(--text-primary) !important;
+        }
+        body.dark-theme .btn-outline:hover, body.dark-theme .profile-menu-item:hover {
+            background: rgba(255,255,255,0.05) !important;
+        }
+        body.dark-theme .chart-grid .card {
+            background: var(--bg-secondary) !important;
+        }
     </style>
 </head>
 <body>
@@ -438,7 +499,7 @@
                         </a>
 
                         <!-- Theme Settings Option -->
-                        <a href="{{ url_for('settings') }}" class="profile-menu-item">
+                        <a href="#" class="profile-menu-item" onclick="selectTheme(localStorage.getItem('theme') || 'dark'); openGlobalModal('globalThemeModal'); return false;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                             </svg>
@@ -530,14 +591,50 @@
                 <button onclick="closeGlobalModal('globalHelpModal')" style="background: none; border: none; font-size: 20px; color: var(--text-secondary, #6b7280); cursor: pointer;">&times;</button>
             </div>
             <div style="line-height: 1.6; color: var(--text-secondary, #4b5563); font-size: 14px;">
-                <p>Welcome to <strong>GradeEvaluator</strong>! Here are a few tips to maximize your academic performance:</p>
-                <ul style="margin-top: 12px; padding-left: 20px; display: flex; flex-direction: column; gap: 10px;">
-                    <li><strong>Regular Tracking:</strong> Log your grades as soon as you receive them to get accurate AI insights.</li>
-                    <li><strong>AI Advisor:</strong> Use the "Generate New Analysis" button on the dashboard for personalized study tips.</li>
-                    <li><strong>Goal Setting:</strong> Use the Quick GPA Calculator to figure out what scores you need to hit your target CGPA.</li>
-                </ul>
+                <p style="margin-top: 0;">Welcome to <strong>GradeEvaluator Pro</strong>! Here are advanced strategies to maximize your academic performance:</p>
+                <div style="margin-top: 16px; padding: 16px; background: rgba(99, 102, 241, 0.05); border-left: 4px solid var(--primary, #6366f1); border-radius: 4px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-primary, #111827);">🤖 AI Predictive Insights</h4>
+                    <p style="margin: 0; font-size: 13px;">Use the "Generate New Analysis" button on your dashboard to let GradeBot analyze your historical grading curve and predict future performance.</p>
+                </div>
+                <div style="margin-top: 12px; padding: 16px; background: rgba(16, 185, 129, 0.05); border-left: 4px solid #10b981; border-radius: 4px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-primary, #111827);">📈 Semester Goal Tracking</h4>
+                    <p style="margin: 0; font-size: 13px;">The Quick GPA Calculator instantly determines the exact letter grades you need in your remaining courses to hit your Target CGPA.</p>
+                </div>
+                <div style="margin-top: 12px; padding: 16px; background: rgba(245, 158, 11, 0.05); border-left: 4px solid #f59e0b; border-radius: 4px;">
+                    <h4 style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-primary, #111827);">🌙 Study Environments</h4>
+                    <p style="margin: 0; font-size: 13px;">Enable Dark Mode in Theme Preferences to reduce eye strain during late-night study sessions and report analysis.</p>
+                </div>
             </div>
             <button class="btn" style="width: 100%; justify-content: center; background: var(--bg-secondary, #f3f4f6); color: var(--text-primary, #111827); padding: 12px; border-radius: 8px; font-weight: 600; margin-top: 24px; border: 1px solid var(--border, #e5e7eb); cursor: pointer;" onclick="closeGlobalModal('globalHelpModal')">Got it, thanks!</button>
+        </div>
+    </div>
+
+    <!-- Global Theme Preferences Modal -->
+    <div id="globalThemeModal" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 24px;">
+        <div class="card" style="width: 100%; max-width: 400px; padding: 32px; background: #ffffff; border-radius: 16px; border: none; box-shadow: 0 20px 40px rgba(0,0,0,0.1); animation: modalEntrance 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary, #111827); margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary, #6366f1);"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    Theme Preferences
+                </h3>
+                <button onclick="closeGlobalModal('globalThemeModal')" style="background: none; border: none; font-size: 20px; color: var(--text-secondary, #6b7280); cursor: pointer;">&times;</button>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                <button onclick="selectTheme('light')" class="btn btn-outline" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px 8px; border-radius: 12px; border: 2px solid var(--border, #e5e7eb); cursor: pointer; transition: all 0.2s;" id="btnThemeLight">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <span style="font-weight: 600; font-size: 13px;">Light Mode</span>
+                </button>
+                <button onclick="selectTheme('dark')" class="btn btn-outline" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px 8px; border-radius: 12px; border: 2px solid var(--border, #e5e7eb); cursor: pointer; transition: all 0.2s;" id="btnThemeDark">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    <span style="font-weight: 600; font-size: 13px;">Dark Mode</span>
+                </button>
+                <button onclick="selectTheme('system')" class="btn btn-outline" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px 8px; border-radius: 12px; border: 2px solid var(--border, #e5e7eb); cursor: pointer; transition: all 0.2s;" id="btnThemeSystem">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    <span style="font-weight: 600; font-size: 13px;">System</span>
+                </button>
+            </div>
+            <button class="btn" style="width: 100%; justify-content: center; background: var(--bg-secondary, #f3f4f6); color: var(--text-primary, #111827); padding: 12px; border-radius: 8px; font-weight: 600; border: 1px solid var(--border, #e5e7eb); cursor: pointer;" onclick="applyTheme()">Done</button>
         </div>
     </div>
 
@@ -635,11 +732,83 @@
         }
         
         const difference = (target - current).toFixed(2);
+        
+        let messageHtml = `<div style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">Gap: ${difference} points</div>`;
+        messageHtml += `<p style="margin: 0; font-size: 13px;">To boost your GPA from <b>${current}</b> to <b>${target}</b>, you will need to consistently score at least a ${difference >= 0.5 ? '<b>A or A+</b>' : '<b>B+ or higher</b>'} in your remaining courses.</p>`;
+        
         resultDiv.style.display = 'block';
-        resultDiv.style.color = '#6366f1';
-        resultDiv.style.background = '#e0e7ff';
-        resultDiv.textContent = `You need an average increase of ${difference} points to reach your target GPA.`;
+        resultDiv.style.color = '#4f46e5';
+        resultDiv.style.background = 'rgba(99, 102, 241, 0.1)';
+        resultDiv.innerHTML = messageHtml;
     };
+
+    // Global Theme Logic
+    window.tempSelectedTheme = localStorage.getItem('theme') || 'dark';
+
+    window.selectTheme = function(mode) {
+        window.tempSelectedTheme = mode;
+        const btnLight = document.getElementById('btnThemeLight');
+        const btnDark = document.getElementById('btnThemeDark');
+        const btnSystem = document.getElementById('btnThemeSystem');
+        
+        // Reset styles for popup buttons if they exist
+        if (btnLight) { btnLight.style.borderColor = 'var(--border, #e5e7eb)'; btnLight.style.background = 'transparent'; }
+        if (btnDark) { btnDark.style.borderColor = 'var(--border, #e5e7eb)'; btnDark.style.background = 'transparent'; }
+        if (btnSystem) { btnSystem.style.borderColor = 'var(--border, #e5e7eb)'; btnSystem.style.background = 'transparent'; }
+        
+        if (mode === 'dark' && btnDark) {
+            btnDark.style.borderColor = 'var(--primary, #6366f1)'; btnDark.style.background = 'rgba(99, 102, 241, 0.05)';
+        } else if (mode === 'light' && btnLight) {
+            btnLight.style.borderColor = 'var(--primary, #6366f1)'; btnLight.style.background = 'rgba(99, 102, 241, 0.05)';
+        } else if (mode === 'system' && btnSystem) {
+            btnSystem.style.borderColor = 'var(--primary, #6366f1)'; btnSystem.style.background = 'rgba(99, 102, 241, 0.05)';
+        }
+    };
+
+    window.applyTheme = function() {
+        const mode = window.tempSelectedTheme;
+        let applyDark = false;
+        
+        if (mode === 'dark') {
+            applyDark = true;
+        } else if (mode === 'light') {
+            applyDark = false;
+        } else if (mode === 'system') {
+            applyDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+        
+        if (applyDark) {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+        
+        localStorage.setItem('theme', mode);
+
+        // Sync settings page select if it exists
+        const settingsSelect = document.getElementById('settingsThemeSelect');
+        if (settingsSelect && settingsSelect.value !== mode) {
+            settingsSelect.value = mode;
+        }
+        
+        closeGlobalModal('globalThemeModal');
+    };
+
+    window.setTheme = function(mode) {
+        window.selectTheme(mode);
+        window.applyTheme();
+    };
+
+    // Listen for system theme changes and apply if set to 'system'
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (localStorage.getItem('theme') === 'system') {
+            setTheme('system');
+        }
+    });
+
+    // Apply theme on page load
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
     </script>
 </body>
 </html>

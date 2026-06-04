@@ -76,10 +76,26 @@
             </h3>
             <div class="form-group">
                 <label style="font-size: 13px; font-weight: 600; color: var(--text-secondary, #4b5563);">Theme</label>
-                <select name="theme" class="form-input" style="margin-top: 8px;">
+                <select id="settingsThemeSelect" name="theme" class="form-input" style="margin-top: 8px;" onchange="setTheme(this.value)">
                     <option value="light">Light Mode</option>
                     <option value="dark">Dark Mode</option>
                     <option value="system">System Default</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Localization Section -->
+        <div class="settings-section">
+            <h3 class="settings-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Localization
+            </h3>
+            <div class="form-group">
+                <label style="font-size: 13px; font-weight: 600; color: var(--text-secondary, #4b5563);">Language (Future Updates)</label>
+                <select name="language" class="form-input" style="margin-top: 8px;">
+                    <option value="en">English</option>
+                    <option value="om">Afaan Oromoo</option>
+                    <option value="am">Amharic</option>
                 </select>
             </div>
         </div>
@@ -94,4 +110,13 @@
     </div>
 </div>
 
+<script>
+    // Sync the select value with the current active theme on page load
+    document.addEventListener("DOMContentLoaded", function() {
+        const themeSelect = document.getElementById('settingsThemeSelect');
+        if (themeSelect) {
+            themeSelect.value = localStorage.getItem('theme') || 'dark';
+        }
+    });
+</script>
 {% endblock %}
