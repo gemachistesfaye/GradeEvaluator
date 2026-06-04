@@ -24,6 +24,11 @@ init_db()
 def calculate_cumulative_gpa(grades):
     if not grades:
         return 0.0
+        
+    for g in grades:
+        if g["letter_grade"] == "F (NG)" or g["score"] < 40:
+            return "NG"
+            
     total_points = sum(
         g["gpa_points"] * g.get("credits", 3)
         for g in grades
@@ -190,8 +195,8 @@ def clear_history():
     if "user_id" not in session:
         return redirect(url_for("login"))
     clear_grades_db(session["user_id"])
-    flash("History cleared.", "info")
-    return redirect(url_for("history"))
+    flash("History cleared. You can now start from scratch!", "info")
+    return redirect(request.referrer or url_for("dashboard"))
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():

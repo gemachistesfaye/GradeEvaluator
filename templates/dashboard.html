@@ -73,11 +73,9 @@
                 <div class="form-group">
                     <label class="form-label">Credit Hours</label>
                     <select name="credits">
-                        <option value="1">1 Credit</option>
                         <option value="2">2 Credits</option>
                         <option value="3" selected>3 Credits</option>
                         <option value="4">4 Credits</option>
-                        <option value="5">5 Credits</option>
                     </select>
                 </div>
             </div>
@@ -95,9 +93,16 @@
                 <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 16px;">📋</div>
                 Recent Activity
             </h3>
-            {% if grades|length > 5 %}
-            <a href="{{ url_for('history') }}" style="font-size: 13px; font-weight: 500;">View All &rarr;</a>
-            {% endif %}
+            <div style="display: flex; align-items: center; gap: 12px;">
+                {% if grades|length > 0 %}
+                <a href="{{ url_for('clear_history') }}" class="btn btn-outline btn-sm" style="color: var(--danger); border-color: var(--danger); font-size: 12px;" onclick="return confirm('Are you sure you want to clear all your grades and start from scratch?')">
+                    🗑️ Clear History
+                </a>
+                {% endif %}
+                {% if grades|length > 5 %}
+                <a href="{{ url_for('history') }}" style="font-size: 13px; font-weight: 500;">View All &rarr;</a>
+                {% endif %}
+            </div>
         </div>
         
         {% if grades and grades|length > 0 %}
