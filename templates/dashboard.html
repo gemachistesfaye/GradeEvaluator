@@ -2,8 +2,8 @@
 {% block content %}
 
 <!-- Load Dashboard Specific CSS & JS -->
-<link rel="stylesheet" href="{{ url_for('static', filename='chatbot.css') }}">
-<script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='chatbot.css') }}?v=1.3">
+<script src="{{ url_for('static', filename='dashboard.js') }}?v=1.3" defer></script>
 
 <style>
     /* Premium Dashboard Styles */
@@ -61,7 +61,7 @@
     }
 
     /* Chatbot Safe Bounds & Interactions */
-    .chat-window {
+    .advisor-panel-view {
         position: fixed !important;
         bottom: 100px !important;
         right: 24px !important;
@@ -79,11 +79,11 @@
         overflow: hidden;
     }
 
-    .chat-window.open {
+    .advisor-panel-view.open {
         display: flex !important;
     }
 
-    .chat-fab {
+    .advisor-float-btn {
         position: fixed !important;
         bottom: 24px !important;
         right: 24px !important;
@@ -561,8 +561,8 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
-{% if grades and grades|length > 0 %}
-<div class="chat-window" id="chatWindow">
+
+<div class="advisor-panel-view" id="advisorPanel">
     <div class="chat-header" style="background: var(--primary, #6366f1); color: white; display: flex; justify-content: space-between; align-items: center; padding: 16px 20px;">
         <div class="chat-header-info" style="display: flex; align-items: center; gap: 10px;">
             <div class="chat-bot-avatar" style="font-size: 24px; display: flex; align-items: center; justify-content: center;">
@@ -571,7 +571,11 @@ document.addEventListener("DOMContentLoaded", function() {
             <div>
                 <div class="chat-bot-name" style="font-weight: 700; font-size: 14px;">GradeBot</div>
                 <div class="chat-bot-status" id="botGradeInfo" style="font-size: 11px; opacity: 0.9;">
+                    {% if grades and grades|length > 0 %}
                     {{ grades[0].subject }} · {{ grades[0].score }}/100
+                    {% else %}
+                    Ready to help
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -609,9 +613,13 @@ document.addEventListener("DOMContentLoaded", function() {
         </button>
     </div>
 </div>
-{% endif %}
-{% if grades and grades|length > 0 %}
-<button id="chatFab" class="chat-fab" onclick="toggleChat()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg></button>
-{% endif %}
+
+<button id="advisorBtn" class="advisor-float-btn" onclick="toggleChat()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg></button>
+<script type="application/json" id="grades-data">
+{{ grades | tojson | safe }}
+</script>
+<script>
+    console.log("GradeEvaluator Chatbot UI successfully loaded in DOM. If you click the FAB, it should toggle.");
+</script>
 
 {% endblock %}

@@ -9,22 +9,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Chatbot if grades exist
     const gradesDataEl = document.getElementById('grades-data');
-    if (!gradesDataEl) return;
+    let gradesData = [];
+    let currentGradeId = null;
 
-    const gradesData = JSON.parse(gradesDataEl.textContent);
-    if (!gradesData || gradesData.length === 0) return;
+    if (gradesDataEl) {
+        try {
+            gradesData = JSON.parse(gradesDataEl.textContent);
+            if (gradesData && gradesData.length > 0) {
+                currentGradeId = gradesData[0].id;
+            }
+        } catch (e) {
+            console.error("Failed to parse grades data", e);
+        }
+    }
 
     let conversation = [];
-    let currentGradeId = gradesData[0].id;
     let chatOpen = false;
 
-    conversation.push({
-        role: 'assistant',
-        content: "Hi there! I'm GradeBot. What would you like to know about this grade?"
-    });
+    if (currentGradeId !== null) {
+        conversation.push({
+            role: 'assistant',
+            content: "Hi there! I'm GradeBot. What would you like to know about this grade?"
+        });
+    } else {
+        conversation.push({
+            role: 'assistant',
+            content: "Hi there! I'm GradeBot. Add some grades so we can analyze them together!"
+        });
+        const initialMsg = document.querySelector('.chat-msg-bot');
+        if (initialMsg) {
+            initialMsg.textContent = "Hi there! I'm GradeBot. Add some grades so we can analyze them together!";
+        }
+    }
 
-    const chatWindow = document.getElementById('chatWindow');
-    const chatFab = document.getElementById('chatFab');
+    const chatWindow = document.getElementById('advisorPanel');
+    const chatFab = document.getElementById('advisorBtn');
     const chatMessages = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendBtn');
@@ -33,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const botGradeInfo = document.getElementById('botGradeInfo');
 
     window.toggleChat = function() {
+        if (!chatWindow || !chatFab) return;
         chatOpen = !chatOpen;
         chatWindow.classList.toggle('open', chatOpen);
         chatFab.innerHTML = chatOpen 
@@ -88,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: msg,
-                    grade_id: currentGradeId,
+                    grade_id: currentGradeId || null,
                     conversation: conversation
                 })
             });
