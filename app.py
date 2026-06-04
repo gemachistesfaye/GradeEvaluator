@@ -274,6 +274,20 @@ def profile():
     user = get_user_profile(user_id)
     grade_count = get_grade_count(user_id)
     return render_template("profile.html", user=user, grade_count=grade_count)
+@app.route('/settings')
+def settings():
+    if "user_id" not in session:
+        return redirect(url_for('login'))
+    # Placeholder settings page – you can extend with actual settings fields later
+    return render_template('settings.html', name=session.get('user_name', 'User'))
+
+@app.route('/notifications')
+def notifications():
+    if "user_id" not in session:
+        return redirect(url_for('login'))
+    # Placeholder for future notifications list
+    notifications = []
+    return render_template('notifications.html', notifications=notifications)
 
 @app.route("/export/csv")
 def export_csv():

@@ -9,75 +9,469 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Favicon (emoji) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+    <link rel="icon" href="{{ url_for('static', filename='logo.svg') }}">
     <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='charts.js') }}" defer></script>
+    
+    <style>
+        /* Modern Glassmorphic Navbar Styling */
+        .navbar {
+            padding: 12px 0; /* Vertical padding only; horizontal is handled by container */
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border, #e5e7eb);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        /* Constrained Nav Container (Aligns perfectly with Main Content) */
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Pro Layout Grid Split */
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex: 1;
+            justify-content: flex-start;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1.5; /* Takes up more visual weight in the center */
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary, #6366f1);
+            text-decoration: none;
+            transition: opacity 0.2s;
+            margin-right: 8px;
+        }
+
+        .nav-brand:hover {
+            opacity: 0.9;
+        }
+
+        /* Left-aligned navigation links */
+        .nav-links-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 14px;
+            color: var(--text-secondary, #4b5563);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(99, 102, 241, 0.05);
+            color: var(--primary, #6366f1);
+        }
+
+        .nav-link.active {
+            color: var(--primary, #6366f1);
+            background: var(--primary-light, rgba(99, 102, 241, 0.08));
+            font-weight: 600;
+        }
+
+        .nav-badge {
+            background: var(--primary-light, rgba(99, 102, 241, 0.1));
+            color: var(--primary, #6366f1);
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Pro Centered Search Bar with FIXED Overlap padding */
+        .nav-search-form {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 340px;
+            transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-search-form:focus-within {
+            max-width: 380px;
+        }
+
+        .nav-search-input {
+            width: 100%;
+            padding: 9px 16px 9px 40px; /* Expanded left padding (40px) to prevent icon overlap */
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary, #111827);
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border, #e5e7eb);
+            border-radius: 99px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-search-input::placeholder {
+            color: var(--text-secondary, #9ca3af);
+        }
+
+        .nav-search-input:focus {
+            background: #ffffff;
+            border-color: var(--primary, #6366f1);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .nav-search-icon {
+            position: absolute;
+            left: 14px;
+            color: var(--text-secondary, #6b7280);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Utility actions styling */
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            color: var(--text-secondary, #4b5563);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-icon:hover {
+            background: rgba(0, 0, 0, 0.04);
+            color: var(--primary, #6366f1);
+        }
+
+        .nav-icon svg {
+            transition: stroke 0.2s;
+        }
+
+        .nav-icon:hover svg {
+            stroke: var(--primary, #6366f1);
+        }
+
+        /* Avatar styling */
+        .avatar-container {
+            position: relative;
+        }
+
+        .avatar-link {
+            background: var(--primary-light, rgba(99, 102, 241, 0.1));
+            color: var(--primary, #6366f1);
+            border: 2px solid transparent;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .avatar-link:hover, .avatar-active {
+            border-color: var(--primary, #6366f1);
+            transform: scale(1.03);
+        }
+
+        /* Clean Popover Menu */
+        .profile-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: var(--bg, #ffffff);
+            border: 1px solid var(--border, #e5e7eb);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 240px;
+            z-index: 1001;
+            overflow: hidden;
+            animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .profile-menu.active {
+            display: block;
+        }
+
+        .profile-menu-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border, #e5e7eb);
+            background: var(--bg-secondary, #f9fafb);
+        }
+
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            color: var(--text-secondary, #4b5563);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .profile-menu-item:hover {
+            background: var(--bg-secondary, #f9fafb);
+            color: var(--primary, #6366f1);
+        }
+
+        .profile-menu-item.logout {
+            color: var(--danger, #ef4444);
+            border-top: 1px solid var(--border, #e5e7eb);
+        }
+
+        .profile-menu-item.logout:hover {
+            background: rgba(239, 68, 68, 0.05);
+            color: var(--danger, #ef4444);
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalEntrance {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Alert Styling */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .alert-error, .alert-danger { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+
+        /* Responsive Mobile Layout adjustments */
+        @media (max-width: 992px) {
+            .nav-links-group {
+                gap: 4px;
+            }
+            .nav-link {
+                padding: 6px 10px;
+                font-size: 13px;
+            }
+            .nav-search-form {
+                max-width: 240px;
+            }
+            .nav-search-form:focus-within {
+                max-width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links-group, .nav-center {
+                display: none; /* Safely collapse navigation & search on mobile */
+            }
+            .nav-left, .nav-right {
+                flex: initial;
+            }
+            .hamburger {
+                display: block !important;
+            }
+        }
+    </style>
 </head>
 <body>
+
     <!-- Top Navbar -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div style="display: flex; align-items: center; gap: 24px;">
-                <a href="{{ url_for('index') }}" class="nav-brand" style="display: flex; align-items: center; gap: 8px;">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                    GradeEvaluator
+        <div class="navbar-container">
+            <!-- Left Column: Branding and tightly aligned Nav links -->
+            <div class="nav-left">
+                <a href="{{ url_for('dashboard') }}" class="nav-brand">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                    <span>GradeEvaluator</span>
                 </a>
+                
                 {% if 'user_id' in session %}
-                <div style="display: flex; gap: 4px;">
-                    <a href="{{ url_for('dashboard') }}" class="btn btn-ghost {{ 'active' if request.endpoint == 'dashboard' else '' }}" style="font-size: 14px; padding: 6px 12px;">Overview</a>
-                    <a href="{{ url_for('history') }}" class="btn btn-ghost {{ 'active' if request.endpoint == 'history' else '' }}" style="font-size: 14px; padding: 6px 12px;">Course History</a>
+                <div class="nav-links-group">
+                    <a href="{{ url_for('dashboard') }}" class="nav-link {{ 'active' if request.endpoint == 'dashboard' else '' }}">Overview</a>
+                    <a href="{{ url_for('history') }}" class="nav-link {{ 'active' if request.endpoint == 'history' else '' }}">Course History</a>
                 </div>
                 {% endif %}
             </div>
-            <div class="nav-links">
-                {% if 'user_id' in session %}
-                <div style="position: relative; display: inline-block;">
-                    <button onclick="document.getElementById('profileMenu').classList.toggle('active')" style="background: var(--primary-light); color: var(--primary); border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-                        {{ session['user_name'][:2] | upper }}
+
+            {% if 'user_id' in session %}
+            <!-- Center Column: Constrained Pro Search Bar -->
+            <div class="nav-center">
+                <form action="{{ url_for('history') }}" method="GET" class="nav-search-form">
+                    <span class="nav-search-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </span>
+                    <input type="text" name="q" class="nav-search-input" placeholder="Search subject or grade..." aria-label="Search grades">
+                </form>
+            </div>
+
+            <!-- Right Column: Utility Action list -->
+            <div class="nav-right">
+                <!-- Global CGPA badge -->
+                {% if current_cgpa is defined %}
+                <div class="nav-badge">CGPA {{ current_cgpa|round(2) }}</div>
+                {% endif %}
+
+                <!-- Semester Switcher Form dropdown -->
+                {% if semesters %}
+                <form id="semesterSwitcher" method="POST" style="margin-right: 4px;">
+                    <select name="semester" onchange="switchSemester(this.value)" style="background: #ffffff; color: var(--text-primary, #111827); border: 1px solid var(--border, #e5e7eb); border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: 500; cursor: pointer; outline: none;">
+                        {% for s in semesters %}
+                        <option value="{{ s }}" {% if s == session.get('active_semester') %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                {% endif %}
+
+                <!-- Quick Add Course button -->
+                <button id="navAddCourse" class="nav-icon" title="Quick Add Course" onclick="addCourseFromNav()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                </button>
+
+                <!-- Notifications Center -->
+                <a href="{{ url_for('notifications') }}" class="nav-icon" title="Notifications Hub" style="position: relative;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="badge" id="notifCount" style="position: absolute; top: 2px; right: 2px; background: var(--danger, #ef4444); color: #fff; border-radius: 50%; width: 6px; height: 6px; display: none;"></span>
+                </a>
+
+                <!-- Clickable User Profile Avatar dropdown container -->
+                <div class="avatar-container">
+                    <button id="avatarTrigger" class="avatar-link {{ 'avatar-active' if request.endpoint == 'profile' else '' }}" aria-haspopup="true" aria-label="Account Settings Menu">
+                        {{ session['user_name'][:2]|upper }}
                     </button>
-                    <div id="profileMenu" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background: var(--bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 220px; z-index: 1000; overflow: hidden;">
-                        <div style="padding: 16px; border-bottom: 1px solid var(--border); background: var(--bg-secondary);">
-                            <div style="font-weight: 600; font-size: 14px; color: var(--text-primary); margin-bottom: 2px;">{{ session['user_name'] }}</div>
-                            <div style="font-size: 12px; color: var(--text-secondary);">Student Account</div>
+                    
+                    <!-- Popover profile navigation overlay -->
+                    <div id="profileMenu" class="profile-menu">
+                        <div class="profile-menu-header">
+                            <div style="font-weight: 600; font-size: 14px; color: var(--text-primary, #111827); margin-bottom: 2px;">{{ session['user_name'] }}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary, #6b7280);">Student Account</div>
                         </div>
-                        <a href="{{ url_for('profile') }}" style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: var(--text-secondary); text-decoration: none; font-size: 13px; transition: background 0.2s;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            Account Settings
+                        
+                        <!-- Profile Settings option -->
+                        <a href="{{ url_for('profile') }}" class="profile-menu-item">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            Profile Settings
                         </a>
-                        <a href="#" onclick="openConfirmModal('Log Out', 'Are you sure you want to log out of your account?', '{{ url_for('logout') }}'); return false;" style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: var(--danger); text-decoration: none; font-size: 13px; border-top: 1px solid var(--border); transition: background 0.2s;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+
+                        <!-- Consolidated Quick GPA Calculator -->
+                        <a href="#" id="menuQuickGpa" class="profile-menu-item" onclick="document.getElementById('quickGpaBtn').click(); return false;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l4 8h8l-6 6 2 8L12 16l-5.5 4 2-7L3 9h7z"/>
+                            </svg>
+                            Quick GPA Calculator
+                        </a>
+
+                        <!-- Consolidated Global Settings -->
+                        <a href="{{ url_for('settings') }}" class="profile-menu-item">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                            Global Settings
+                        </a>
+
+                        <!-- Consolidated Help Option -->
+                        <a href="#" id="menuHelp" class="profile-menu-item" onclick="document.getElementById('helpBtn').click(); return false;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="16"/><path d="M12 12a2 2 0 1 0-2-2"/>
+                            </svg>
+                            Academic Help
+                        </a>
+
+                        <!-- Logout Button -->
+                        <a href="#" onclick="openConfirmModal('Log Out','Are you sure you want to log out of your account?', \"{{ url_for('logout') }}\"); return false;" class="profile-menu-item logout">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
                             Logout
                         </a>
                     </div>
                 </div>
-                {% else %}
-                <a href="{{ url_for('login') }}" class="btn btn-ghost">Login</a>
-                <a href="{{ url_for('register') }}" class="btn btn-sm">Get Started</a>
-                {% endif %}
+
+                <!-- Hidden trigger targets so existing JS bindings for Quick GPA and Help don't break -->
+                <button id="quickGpaBtn" style="display: none;"></button>
+                <button id="helpBtn" style="display: none;"></button>
+
+                <!-- Hamburger menu for mobile scaling -->
+                <button id="navToggle" class="hamburger" aria-label="Open Navigation Menu" style="background: none; border: none; color: var(--text-secondary, #4b5563); font-size: 22px; cursor: pointer; display: none; margin-left: 4px;">☰</button>
             </div>
+            {% else %}
+            <div class="nav-right">
+                <a href="{{ url_for('login') }}" class="btn btn-ghost" style="font-size:14px; text-decoration:none; color:var(--text-secondary,#4b5563); padding:8px 16px;">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-sm" style="font-size:14px; text-decoration:none; background:var(--primary,#6366f1); color:white; padding:8px 16px; border-radius:8px; font-weight:500;">Get Started</a>
+            </div>
+            {% endif %}
         </div>
     </nav>
-    <style>
-        #profileMenu.active { display: block !important; }
-        #profileMenu a:hover { background: var(--bg-secondary); color: var(--primary); }
-    </style>
-    <script>
-        document.addEventListener('click', function(event) {
-            const menu = document.getElementById('profileMenu');
-            if (menu && menu.classList.contains('active')) {
-                const btn = menu.previousElementSibling;
-                if (!menu.contains(event.target) && !btn.contains(event.target)) {
-                    menu.classList.remove('active');
-                }
-            }
-        });
-    </script>
 
-    <!-- Main Content -->
-    <main class="container" style="padding-top: 40px; padding-bottom: 60px;">
+    <!-- Main Content Grid -->
+    <main class="container" style="padding-top: 40px; padding-bottom: 60px; max-width: 1200px; margin: 0 auto; padding-left: 24px; padding-right: 24px;">
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -89,43 +483,61 @@
         {% endif %}
         {% endwith %}
 
-        <!-- Page Content -->
+        <!-- Dynamic Page Injector -->
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Custom Confirm Modal -->
-    <div id="confirmModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 24px;">
-        <div class="card" style="width: 100%; max-width: 400px; padding: 32px; text-align: center; animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: none;">
-            <div style="font-size: 40px; margin-bottom: 16px;">⚠️</div>
-            <h3 id="confirmTitle" style="font-size: 20px; margin-bottom: 12px;">Are you sure?</h3>
-            <p id="confirmMessage" style="color: var(--text-secondary); font-size: 14px; margin-bottom: 32px;">This action cannot be undone.</p>
+    <!-- Global Action Confirmation Modal -->
+    <div id="confirmModal" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 24px;">
+        <div class="card" style="width: 100%; max-width: 400px; padding: 32px; text-align: center; background: #ffffff; border-radius: 16px; border: none; box-shadow: 0 20px 40px rgba(0,0,0,0.1); animation: modalEntrance 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div style="font-size: 44px; margin-bottom: 16px;">⚠️</div>
+            <h3 id="confirmTitle" style="font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--text-primary, #111827);">Are you sure?</h3>
+            <p id="confirmMessage" style="color: var(--text-secondary, #4b5563); font-size: 14px; line-height: 1.5; margin-bottom: 32px;">This action cannot be undone.</p>
             <div style="display: flex; gap: 12px; justify-content: center;">
-                <button onclick="closeConfirmModal()" class="btn btn-outline" style="flex: 1;">Cancel</button>
-                <a id="confirmActionBtn" href="#" class="btn" style="flex: 1; background: var(--danger); border-color: var(--danger);">Yes, confirm</a>
+                <button onclick="closeConfirmModal()" class="btn btn-outline" style="flex: 1; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border, #e5e7eb); background: transparent; cursor: pointer; font-weight: 500;">Cancel</button>
+                <a id="confirmActionBtn" href="#" class="btn" style="flex: 1; padding: 10px 16px; border-radius: 8px; background: var(--danger, #ef4444); color: #ffffff; text-decoration: none; display: flex; align-items: center; justify-content: center; font-weight: 500;">Yes, confirm</a>
             </div>
         </div>
     </div>
-    <style>
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
 
+    <!-- Layout Logic Scripts -->
     <script>
-    // Global Confirm Modal
+    // Robust dropdown click activation
+    const avatarTrigger = document.getElementById('avatarTrigger');
+    const profileMenu = document.getElementById('profileMenu');
+
+    if (avatarTrigger && profileMenu) {
+        avatarTrigger.addEventListener('click', function(event) {
+            event.stopPropagation();
+            profileMenu.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!profileMenu.contains(event.target) && !avatarTrigger.contains(event.target)) {
+                profileMenu.classList.remove('active');
+            }
+        });
+    }
+
+    // Modal control utility functions
     window.openConfirmModal = function(title, message, href) {
         document.getElementById('confirmTitle').textContent = title;
         document.getElementById('confirmMessage').textContent = message;
         document.getElementById('confirmActionBtn').href = href;
         document.getElementById('confirmModal').style.display = 'flex';
     };
+
     window.closeConfirmModal = function() {
         document.getElementById('confirmModal').style.display = 'none';
     };
 
-    // Auto-dismiss alerts
+    // Self-dismissing page flash alerts
     setTimeout(() => {
         document.querySelectorAll('.alert').forEach(a => {
-            a.style.transition = 'opacity 0.5s ease';
+            a.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
             a.style.opacity = '0';
+            a.style.transform = 'translateY(-10px)';
             setTimeout(() => a.remove(), 500);
         });
     }, 4000);

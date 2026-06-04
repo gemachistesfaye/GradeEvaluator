@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="max-width:600px;margin:auto;padding:24px;">
+  <h2 style="font-size:24px;color:var(--text-primary);margin-bottom:16px;">Settings</h2>
+  <p style="color:var(--text-secondary);">This page will host user preferences, theme options, and other configuration settings. Feel free to customize it.</p>
+  <a href="{{ url_for('dashboard') }}" class="btn" style="margin-top:24px;">Back to Dashboard</a>
+</div>
+{% endblock %}

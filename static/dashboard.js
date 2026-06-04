@@ -18,10 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentGradeId = gradesData[0].id;
     let chatOpen = false;
 
-    // Add initial greeting
     conversation.push({
         role: 'assistant',
-        content: "Hi there! 👋 I'm GradeBot. What would you like to know about this grade?"
+        content: "Hi there! I'm GradeBot. What would you like to know about this grade?"
     });
 
     const chatWindow = document.getElementById('chatWindow');
@@ -36,7 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.toggleChat = function() {
         chatOpen = !chatOpen;
         chatWindow.classList.toggle('open', chatOpen);
-        chatFab.innerHTML = chatOpen ? '✕' : '🤖';
+        chatFab.innerHTML = chatOpen 
+            ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>' 
+            : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg>';
         if (chatOpen) scrollToBottom();
     };
 
@@ -125,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             botGradeInfo.textContent = `${newGrade.subject} · ${newGrade.score}/100 · ${newGrade.letter_grade}`;
         }
 
-        addMessage('Switched! Ask me anything about this grade. 😊', 'assistant');
+        addMessage('Switched! Ask me anything about this grade.', 'assistant');
         conversation.push({ role: 'assistant', content: 'Switched grade context!' });
     };
     

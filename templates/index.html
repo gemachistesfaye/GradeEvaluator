@@ -2,9 +2,33 @@
 {% block content %}
 
 <div style="text-align: center; padding: 60px 0;">
-    <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--primary-light); color: var(--primary); padding: 6px 16px; border-radius: 999px; font-weight: 600; font-size: 13px; margin-bottom: 24px;">
-        ✨ GradeEvaluator v2.0 is Here
-    </div>
+    {% raw %}
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--primary-light); color: var(--primary); padding: 6px 16px; border-radius: 999px; font-weight: 600; font-size: 13px; margin-bottom: 24px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z"/></svg>
+            GradeEvaluator v2.0 is Here
+        </div>
+{% endraw %}
+        <div class="card" style="text-align: center; padding: 32px 24px;">
+            <div style="font-size: 40px; margin-bottom: 16px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2 4 4 8-8 2 2"/></svg>
+            </div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">Grade Tracking</h3>
+            <p style="color: var(--text-secondary); font-size: 14px;">Easily evaluate your numerical scores into letter grades and GPA points.</p>
+        </div>
+        <div class="card" style="text-align: center; padding: 32px 24px;">
+            <div style="font-size: 40px; margin-bottom: 16px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><circle cx="12" cy="12" r="5"/></svg>
+            </div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">AI Feedback</h3>
+            <p style="color: var(--text-secondary); font-size: 14px;">Get instant, personalized feedback from GradeBot based on your performance.</p>
+        </div>
+        <div class="card" style="text-align: center; padding: 32px 24px;">
+            <div style="font-size: 40px; margin-bottom: 16px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M12 3v18"/></svg>
+            </div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">Beautiful Insights</h3>
+            <p style="color: var(--text-secondary); font-size: 14px;">Visualize your academic journey with interactive charts and GPA trends.</p>
+        </div>{% endraw %}
     <h1 style="font-size: 48px; font-weight: 800; color: var(--text-primary); margin-bottom: 16px; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.1;">
         Your Personal AI <br> <span style="color: var(--primary);">Academic Coach.</span>
     </h1>
@@ -19,7 +43,7 @@
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px;">
     <div class="card" style="text-align: center; padding: 32px 24px;">
-        <div style="font-size: 40px; margin-bottom: 16px;">📊</div>
+        <div style="font-size: 40px; margin-bottom: 16px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M9 17l3-8 4 4 5-5"/></svg></div>
         <h3 style="font-size: 18px; margin-bottom: 8px;">Grade Tracking</h3>
         <p style="color: var(--text-secondary); font-size: 14px;">Easily evaluate your numerical scores into letter grades and GPA points.</p>
     </div>
