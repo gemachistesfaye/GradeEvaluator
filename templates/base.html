@@ -19,16 +19,40 @@
 <body>
     <!-- Top Navbar -->
     <nav class="navbar">
-        <div class="container">
-            <a href="{{ url_for('index') }}" class="nav-brand">
-                <span>🎓</span> GradeEvaluator
-            </a>
+        <div class="nav-container">
+            <div style="display: flex; align-items: center; gap: 24px;">
+                <a href="{{ url_for('index') }}" class="nav-brand" style="display: flex; align-items: center; gap: 8px;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    GradeEvaluator
+                </a>
+                {% if 'user_id' in session %}
+                <div style="display: flex; gap: 4px;">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-ghost {{ 'active' if request.endpoint == 'dashboard' else '' }}" style="font-size: 14px; padding: 6px 12px;">Overview</a>
+                    <a href="{{ url_for('history') }}" class="btn btn-ghost {{ 'active' if request.endpoint == 'history' else '' }}" style="font-size: 14px; padding: 6px 12px;">Course History</a>
+                </div>
+                {% endif %}
+            </div>
             <div class="nav-links">
-                {% if session.user_id %}
-                <a href="{{ url_for('dashboard') }}" class="btn btn-ghost {{ 'active' if request.endpoint == 'dashboard' else '' }}">Dashboard</a>
-                <a href="{{ url_for('history') }}" class="btn btn-ghost {{ 'active' if request.endpoint == 'history' else '' }}">History</a>
-                <a href="{{ url_for('profile') }}" class="btn btn-ghost {{ 'active' if request.endpoint == 'profile' else '' }}">Profile</a>
-                <a href="#" onclick="openConfirmModal('Log Out', 'Are you sure you want to log out of your account?', '{{ url_for('logout') }}'); return false;" class="btn btn-outline btn-sm">Logout</a>
+                {% if 'user_id' in session %}
+                <div style="position: relative; display: inline-block;">
+                    <button onclick="document.getElementById('profileMenu').classList.toggle('active')" style="background: var(--primary-light); color: var(--primary); border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                        {{ session['user_name'][:2] | upper }}
+                    </button>
+                    <div id="profileMenu" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background: var(--bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 220px; z-index: 1000; overflow: hidden;">
+                        <div style="padding: 16px; border-bottom: 1px solid var(--border); background: var(--bg-secondary);">
+                            <div style="font-weight: 600; font-size: 14px; color: var(--text-primary); margin-bottom: 2px;">{{ session['user_name'] }}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Student Account</div>
+                        </div>
+                        <a href="{{ url_for('profile') }}" style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: var(--text-secondary); text-decoration: none; font-size: 13px; transition: background 0.2s;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            Account Settings
+                        </a>
+                        <a href="#" onclick="openConfirmModal('Log Out', 'Are you sure you want to log out of your account?', '{{ url_for('logout') }}'); return false;" style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: var(--danger); text-decoration: none; font-size: 13px; border-top: 1px solid var(--border); transition: background 0.2s;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            Logout
+                        </a>
+                    </div>
+                </div>
                 {% else %}
                 <a href="{{ url_for('login') }}" class="btn btn-ghost">Login</a>
                 <a href="{{ url_for('register') }}" class="btn btn-sm">Get Started</a>
@@ -36,6 +60,21 @@
             </div>
         </div>
     </nav>
+    <style>
+        #profileMenu.active { display: block !important; }
+        #profileMenu a:hover { background: var(--bg-secondary); color: var(--primary); }
+    </style>
+    <script>
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('profileMenu');
+            if (menu && menu.classList.contains('active')) {
+                const btn = menu.previousElementSibling;
+                if (!menu.contains(event.target) && !btn.contains(event.target)) {
+                    menu.classList.remove('active');
+                }
+            }
+        });
+    </script>
 
     <!-- Main Content -->
     <main class="container" style="padding-top: 40px; padding-bottom: 60px;">

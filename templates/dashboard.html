@@ -9,54 +9,51 @@
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
     <div>
         <h1 style="font-size: 24px; margin-bottom: 4px;">Dashboard</h1>
-        <p style="color: var(--text-secondary); margin: 0;">Welcome back, <span style="font-weight: 600;">{{ name }}</span> 👋</p>
+        <p style="color: var(--text-secondary); margin: 0;">Welcome back, <span style="font-weight: 600;">{{ name }}</span> <svg style="display:inline; margin-left: 4px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></p>
     </div>
     <div style="display: flex; gap: 12px;">
-        <a href="{{ url_for('export_csv') }}" class="btn btn-outline btn-sm">
-            ⬇️ Export CSV
+        <a href="{{ url_for('export_csv') }}" class="btn btn-outline btn-sm" style="display:flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
         </a>
-        <a href="{{ url_for('export_pdf') }}" class="btn btn-outline btn-sm">
-            📄 Export PDF
+        <a href="{{ url_for('export_pdf') }}" class="btn btn-outline btn-sm" style="display:flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Export PDF
         </a>
     </div>
 </div>
 
-<!-- STATS WIDGETS -->
-{% if grades and grades|length > 0 %}
-{% set avg_score = (grades|sum(attribute='score') / grades|length)|round(1) %}
-{% set total_credits = grades|sum(attribute='credits') if grades[0].credits is defined else 0 %}
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
-    
-    <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none;">
-        <div style="font-size: 13px; font-weight: 500; opacity: 0.9; text-transform: uppercase; margin-bottom: 8px;">Cumulative GPA</div>
-        <div style="font-size: 32px; font-weight: 800; line-height: 1;">{{ cumulative_gpa if cumulative_gpa is defined else '—' }}</div>
+<!-- STATS ROW -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 40px;">
+    <div class="card stat-card" style="padding: 24px;">
+        <div class="stat-label">Cumulative GPA</div>
+        <div class="stat-value">{{ cumulative_gpa if cumulative_gpa is defined else '—' }}</div>
     </div>
-    
-    <div class="card">
-        <div style="font-size: 13px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Average Score</div>
-        <div style="font-size: 28px; font-weight: 800; color: var(--text-primary); line-height: 1;">{{ avg_score }}</div>
+    <div class="card stat-card" style="padding: 24px;">
+        <div class="stat-label">Average Score</div>
+        <div class="stat-value">
+            {% if grades and grades|length > 0 %}
+            {{ (grades|sum(attribute='score') / grades|length)|round(1) }}
+            {% else %}0.0{% endif %}
+        </div>
     </div>
-    
-    <div class="card">
-        <div style="font-size: 13px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Total Credits</div>
-        <div style="font-size: 28px; font-weight: 800; color: var(--text-primary); line-height: 1;">{{ total_credits }}</div>
+    <div class="card stat-card" style="padding: 24px;">
+        <div class="stat-label">Total Credits</div>
+        <div class="stat-value">{{ grades|sum(attribute='credits') if (grades and grades[0].credits is defined) else 0 }}</div>
     </div>
-
-    <div class="card">
-        <div style="font-size: 13px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px;">Evaluated</div>
-        <div style="font-size: 28px; font-weight: 800; color: var(--text-primary); line-height: 1;">{{ grades|length }}</div>
+    <div class="card stat-card" style="padding: 24px;">
+        <div class="stat-label">Evaluated</div>
+        <div class="stat-value">{{ grades|length if grades else 0 }}</div>
     </div>
-    
 </div>
-{% endif %}
 
 <!-- MAIN TWO COLUMN LAYOUT -->
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px;">
+<div style="display: flex; gap: 40px; margin-bottom: 40px;">
     
     <!-- LEFT: NEW EVALUATION -->
-    <div class="card">
+    <div class="card" style="flex: 1;">
         <h3 style="font-size: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
-            <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 16px;">+</div>
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
             Evaluate New Grades
         </h3>
         <form method="POST" id="evaluateForm">
@@ -99,25 +96,27 @@
                 </div>
             </div>
             
-            <button type="button" class="btn btn-outline" style="width: 100%; margin-bottom: 16px; justify-content: center;" onclick="addCourseRow()">
-                ➕ Add Another Course
+            <button type="button" class="btn btn-outline" style="width: 100%; margin-bottom: 16px; justify-content: center; display: flex; align-items: center; gap: 8px;" onclick="addCourseRow()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Another Course
             </button>
             
-            <button type="submit" class="btn" style="width: 100%; padding: 12px; font-size: 15px; justify-content: center;">
-                Save Grades & Calculate GPA 📊
+            <button type="submit" class="btn" style="width: 100%; padding: 12px; font-size: 15px; justify-content: center; display: flex; align-items: center; gap: 8px;">
+                Save Grades & Calculate GPA <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
             </button>
         </form>
     </div>
     
     <!-- RIGHT: RECENT GRADES -->
-    <div class="card" style="display: flex; flex-direction: column;">
+    <div class="card" style="flex: 1; display: flex; flex-direction: column;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h3 style="font-size: 16px; display: flex; align-items: center; gap: 8px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 16px;">📚</div>
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                </div>
                 Semester Breakdown
             </h3>
             <div style="display: flex; align-items: center; gap: 12px;">
-                {% if grades|length > 0 %}
+                {% if grades and grades|length > 0 %}
                 <a href="#" class="btn btn-outline btn-sm" style="color: var(--danger); border-color: var(--danger); font-size: 12px;" onclick="openConfirmModal('Clear History', 'Are you sure you want to clear all your grades and start from scratch?', '{{ url_for('clear_history') }}'); return false;">
                     🗑️ Clear History
                 </a>
@@ -166,7 +165,9 @@
 <!-- AI FEEDBACK SECTION -->
 <div class="card" style="margin-bottom: 40px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(to right, var(--bg-secondary), var(--bg));">
     <div style="display: flex; align-items: center; gap: 16px;">
-        <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 24px;">🤖</div>
+        <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        </div>
         <div>
             <h3 style="font-size: 16px; margin-bottom: 4px;">Academic Advisor Report</h3>
             <p style="color: var(--text-secondary); font-size: 13px; margin: 0;">Analyze your overall semester performance.</p>
@@ -174,10 +175,14 @@
     </div>
     <div style="display: flex; gap: 12px;">
         {% if grades and grades[0].ai_feedback %}
-        <button onclick="document.getElementById('aiReportModal').classList.add('active')" class="btn btn-outline">View Report ✨</button>
+        <button onclick="document.getElementById('aiReportModal').classList.add('active')" class="btn btn-outline" style="display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> View Report
+        </button>
         {% endif %}
         <form method="POST" action="{{ url_for('generate_report') }}" style="margin: 0;" onsubmit="document.getElementById('loadingOverlay').classList.add('active');">
-            <button type="submit" class="btn">🧠 Generate New Analysis</button>
+            <button type="submit" class="btn" style="display:flex; align-items:center; gap:8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Generate New Analysis
+            </button>
         </form>
     </div>
 </div>
@@ -186,7 +191,10 @@
 <div id="aiReportModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 24px;">
     <div class="card" style="width: 100%; max-width: 600px; max-height: 85vh; display: flex; flex-direction: column; padding: 0; overflow: hidden; position: relative; animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
         <div style="padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-secondary);">
-            <h3 style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px;">🤖 AI Advisor Report</h3>
+            <h3 style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg> 
+                AI Advisor Report
+            </h3>
             <button onclick="document.getElementById('aiReportModal').classList.remove('active')" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); transition: color 0.2s;">&times;</button>
         </div>
         <div style="padding: 24px; overflow-y: auto; line-height: 1.6; font-size: 15px; color: var(--text-primary);">
@@ -244,7 +252,9 @@
 
 <!-- FLOATING CHATBOT -->
 {% if grades and grades|length > 0 %}
-<button class="chat-fab" id="chatFab" onclick="toggleChat()">🤖</button>
+<button class="chat-fab" id="chatFab" onclick="toggleChat()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
 
 <div class="chat-window" id="chatWindow">
     <div class="chat-header">
