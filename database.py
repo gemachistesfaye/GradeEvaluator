@@ -78,7 +78,7 @@ def add_grade(student_id, subject, score, letter_grade, gpa_points, ai_feedback,
             )
         except sqlite3.OperationalError as e:
             # If credits column missing, add it then retry
-            if "no such column: credits" in str(e):
+            if "credits" in str(e).lower():
                 conn.execute('ALTER TABLE grades ADD COLUMN credits INTEGER NOT NULL DEFAULT 3')
                 conn.execute(
                     "INSERT INTO grades (student_id, subject, score, letter_grade, gpa_points, ai_feedback, date, credits) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
