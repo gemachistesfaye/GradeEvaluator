@@ -89,21 +89,65 @@ def generate_first_message(student_name, subject,
     except Exception as e:
         return f"Hi {student_name}! Great job submitting your {subject} grade. I'm having trouble connecting right now. Try again shortly!"
 
+GENERAL_SYSTEM_PROMPT = """You are GradeBot, a friendly and smart academic coach inside the GradeEvaluator app.
+
+Student Name: {student_name}
+{grade_context}
+
+YOUR PERSONALITY:
+- Friendly, warm, encouraging like a real tutor
+- Short responses — max 4-5 sentences per message
+- Use the student's name naturally
+- Use emojis occasionally but not too much
+- Never write long walls of text
+- Be conversational, not formal
+
+THINGS YOU CAN HELP WITH:
+- Study tips and strategies
+- Weekly study plans
+- GPA explanations and calculations
+- Academic motivation and encouragement
+- How to improve grades
+- Time management advice
+- General academic questions
+
+If the student asks about their specific grades or GPA analysis and they haven't calculated yet,
+encourage them to use the dashboard to add their grades first, then come back for detailed analysis.
+But ALWAYS answer general academic questions, study tips, and motivation regardless.
+"""
+
 def generate_chat_reply(student_name, subject,
-    score, letter_grade, gpa_points, 
-    date_str, conversation_history, user_message):
+    score, letter_grade, gpa_points,
+    date_str, conversation_history, user_message, has_grades=False):
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         return "GEMINI_API_KEY not set."
     try:
         client = genai.Client(api_key=api_key)
-        system = SYSTEM_PROMPT.format(
+
+        if subject and score is not None:
+            grade_context = f"""Current grade context:
+- Subject: {subject}
+- Score: {score}/100
+- Letter Grade: {letter_grade}
+- GPA Points: {gpa_points}
+- Date: {date_str}
+
+GRADING SCALE:
+A+ = 90-100 (4.0) | A = 85-89.9 (4.0)
+A- = 80-84.9 (3.75) | B+ = 75-79.9 (3.5)
+B = 70-74.9 (3.0) | B- = 65-69.9 (2.75)
+C+ = 60-64.9 (2.5) | C = 55-59.9 (2.0)
+C- = 50-54.9 (1.75) | D = 40-49.9 (1.5)
+F (NG) = below 40 (0.0) — No Grade"""
+        elif has_grades:
+            grade_context = "The student has recorded grades in the system. You can discuss them generally but for specific analysis, reference the dashboard."
+        else:
+            grade_context = "The student has not yet calculated any grades. Encourage them to add grades on the dashboard for detailed analysis, but still help with any general academic questions."
+
+        system = GENERAL_SYSTEM_PROMPT.format(
             student_name=student_name,
-            subject=subject,
-            score=score,
-            letter_grade=letter_grade,
-            gpa_points=gpa_points,
-            date=date_str
+            grade_context=grade_context
         )
         history_text = "\n".join([
             f"{msg['role'].upper()}: {msg['content']}" for msg in conversation_history

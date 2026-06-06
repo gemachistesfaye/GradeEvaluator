@@ -159,4 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') sendChat();
     });
+    // Auto-open chatbot on dashboard load
+    window.toggleChat();
 });
+// Auto-open chatbot on dashboard load
+window.toggleChat();

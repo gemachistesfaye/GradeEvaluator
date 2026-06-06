@@ -808,8 +808,240 @@
     });
 
     // Apply theme on page load
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
     </script>
+{% if session.get('user_id') %}
+<!-- ===== GLOBAL GRADEBOT CHATBOT (Premium Design) ===== -->
+<link rel="stylesheet" href="{{ url_for('static', filename='chatbot.css') }}">
+
+<!-- Floating Action Button -->
+<button class="advisor-float-btn" id="globalAdvisorBtn" onclick="gbToggle()" title="Ask GradeBot">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<!-- Chat Panel -->
+<div class="advisor-panel-view" id="globalAdvisorPanel">
+
+    <!-- Header -->
+    <div class="chat-header">
+        <div class="chat-header-info">
+            <div class="chat-bot-avatar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            </div>
+            <div>
+                <div class="chat-bot-name">GradeBot</div>
+                <div class="chat-bot-status" id="gbStatusText">Always here to help 🎓</div>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <!-- Course selector (shown only when grades exist) -->
+            <select id="gbCourseSelect" onchange="gbSwitchCourse(this.value)"
+                style="display:none; background:rgba(255,255,255,0.18); color:white; border:1px solid rgba(255,255,255,0.3); border-radius:8px; padding:4px 8px; font-size:11px; font-weight:600; cursor:pointer; outline:none; max-width:130px;">
+                <option value="">🌐 General</option>
+            </select>
+            <button onclick="gbToggle()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);width:32px;height:32px;border-radius:50%;color:white;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;line-height:1;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">&times;</button>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-messages" id="globalChatMessages">
+        <div class="chat-msg chat-msg-bot">Hi! 👋 I'm <strong>GradeBot</strong>, your academic coach. Ask me anything — or pick a course above to get specific grade advice!</div>
+    </div>
+
+    <!-- Quick chips -->
+    <div class="chat-chips" id="gbChips">
+        <button class="chip" onclick="gbQuick('Give me 5 effective study tips')">📚 Study Tips</button>
+        <button class="chip" onclick="gbQuick('Create a weekly study plan for me')">📅 Study Plan</button>
+        <button class="chip" onclick="gbQuick('How does GPA calculation work?')">🎯 GPA Help</button>
+        <button class="chip" onclick="gbQuick('I need some motivation to study!')">💪 Motivate Me</button>
+    </div>
+
+    <!-- Input area -->
+    <div class="chat-input-area">
+        <input type="text" id="globalChatInput" placeholder="Ask GradeBot anything..." autocomplete="off">
+        <button class="chat-send-btn" id="globalSendBtn" onclick="gbSend()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+    </div>
+</div>
+
+<script>
+(function() {
+    var gbOpen = false;
+    var gbConversation = [];
+    var gbCurrentGradeId = null;
+    var gbGradesLoaded = false;
+
+    // ── Toggle panel ──────────────────────────────────────────
+    window.gbToggle = function() {
+        gbOpen = !gbOpen;
+        var panel = document.getElementById('globalAdvisorPanel');
+        var fab   = document.getElementById('globalAdvisorBtn');
+        if (gbOpen) {
+            panel.classList.add('open');
+            fab.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+            if (!gbGradesLoaded) gbLoadGrades();
+            setTimeout(function(){ var i = document.getElementById('globalChatInput'); if(i) i.focus(); }, 300);
+        } else {
+            panel.classList.remove('open');
+            fab.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg>';
+        }
+    };
+
+    // ── Load grades from API ───────────────────────────────────
+    async function gbLoadGrades() {
+        gbGradesLoaded = true;
+        try {
+            var res  = await fetch('/api/my-grades');
+            var data = await res.json();
+            var grades = data.grades || [];
+            var sel = document.getElementById('gbCourseSelect');
+            var chips = document.getElementById('gbChips');
+
+            if (grades.length > 0) {
+                // Populate dropdown
+                sel.innerHTML = '<option value="">🌐 General</option>';
+                grades.forEach(function(g) {
+                    var opt = document.createElement('option');
+                    opt.value = g.id;
+                    opt.textContent = g.subject + ' (' + g.letter_grade + ')';
+                    sel.appendChild(opt);
+                });
+                sel.style.display = 'block';
+
+                // Add course-specific chips
+                chips.innerHTML =
+                    '<button class="chip" onclick="gbQuick(\'How can I improve this grade?\')">📈 Improve</button>' +
+                    '<button class="chip" onclick="gbQuick(\'Give me study tips for this subject\')">📚 Study Tips</button>' +
+                    '<button class="chip" onclick="gbQuick(\'What does my GPA score mean?\')">🎯 GPA Impact</button>' +
+                    '<button class="chip" onclick="gbQuick(\'Motivate me to study harder!\')">💪 Motivate Me</button>';
+
+                // Auto-select first course
+                gbCurrentGradeId = grades[0].id;
+                sel.value = gbCurrentGradeId;
+                document.getElementById('gbStatusText').textContent = grades[0].subject + ' · ' + grades[0].score + '/100';
+
+                // Update welcome message
+                var msgs = document.getElementById('globalChatMessages');
+                var firstMsg = msgs.querySelector('.chat-msg-bot');
+                if (firstMsg) firstMsg.innerHTML = 'Hi! 👋 I\'m <strong>GradeBot</strong>. I can see your grades — pick a course from the dropdown or ask me anything! 🎓';
+            }
+        } catch(e) {
+            console.warn('GradeBot: could not load grades', e);
+        }
+    }
+
+    // ── Switch course ──────────────────────────────────────────
+    window.gbSwitchCourse = function(gradeId) {
+        gbCurrentGradeId = gradeId ? parseInt(gradeId) : null;
+        gbConversation = [];
+
+        var msgs = document.getElementById('globalChatMessages');
+        msgs.innerHTML = '';
+
+        var statusEl = document.getElementById('gbStatusText');
+        var sel = document.getElementById('gbCourseSelect');
+
+        if (gbCurrentGradeId) {
+            var opt = sel.querySelector('option[value="' + gradeId + '"]');
+            var label = opt ? opt.textContent : 'this course';
+            statusEl.textContent = label;
+            gbAddMsg('Switched to <strong>' + (opt ? opt.textContent : 'this course') + '</strong>! Ask me anything about it 📘', 'bot');
+        } else {
+            statusEl.textContent = 'Always here to help 🎓';
+            gbAddMsg('Back to <strong>General</strong> mode — ask me anything! 💬', 'bot');
+        }
+    };
+
+    // ── Add message ────────────────────────────────────────────
+    function gbAddMsg(html, role) {
+        var msgs = document.getElementById('globalChatMessages');
+        var div  = document.createElement('div');
+        div.className = 'chat-msg ' + (role === 'user' ? 'chat-msg-user' : 'chat-msg-bot');
+        if (role === 'user') {
+            div.textContent = html;
+        } else {
+            var formatted = html
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>');
+            div.innerHTML = formatted;
+        }
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function gbAddTyping() {
+        var msgs = document.getElementById('globalChatMessages');
+        var div  = document.createElement('div');
+        div.className = 'chat-msg chat-msg-bot';
+        div.id = 'gbTypingIndicator';
+        div.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function gbRemoveTyping() {
+        var t = document.getElementById('gbTypingIndicator');
+        if (t) t.remove();
+    }
+
+    // ── Send message ───────────────────────────────────────────
+    window.gbSend = async function() {
+        var input = document.getElementById('globalChatInput');
+        var btn   = document.getElementById('globalSendBtn');
+        var msg   = input.value.trim();
+        if (!msg) return;
+
+        input.value = '';
+        btn.disabled = true;
+
+        gbAddMsg(msg, 'user');
+        gbConversation.push({role: 'user', content: msg});
+        gbAddTyping();
+
+        try {
+            var res = await fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    message: msg,
+                    grade_id: gbCurrentGradeId || null,
+                    conversation: gbConversation
+                })
+            });
+            var data = await res.json();
+            gbRemoveTyping();
+            var reply = data.reply || "Sorry, I couldn't respond right now.";
+            gbAddMsg(reply, 'bot');
+            gbConversation.push({role: 'assistant', content: reply});
+        } catch(e) {
+            gbRemoveTyping();
+            gbAddMsg('Oops, something went wrong. Please try again!', 'bot');
+        }
+
+        btn.disabled = false;
+        input.focus();
+    };
+
+    window.gbQuick = function(msg) {
+        if (!gbOpen) gbToggle();
+        setTimeou if (!gbOpen) gbToggle();
+        setTimeout(function() {
+            var input = document.getElementById('globalChatInput');
+            if (input) { input.value = msg; gbSend(); }
+        }, 350);
+    };
+
+    // Enter key to send
+    document.addEventListener('DOMContentLoaded', function() {
+        var inp = document.getElementById('globalChatInput');
+        if (inp) inp.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) gbSend();
+        });
+    });
+})();
+</script>
+{% endif %}
 </body>
 </html>

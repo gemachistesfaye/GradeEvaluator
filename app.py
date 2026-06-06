@@ -211,23 +211,33 @@ def chat():
         return {"reply": "Please log in first!"}, 403
     
     data = request.get_json()
-    message = data.get("message")
+    message = data.get("message", "")
     grade_id = data.get("grade_id")
     conversation = data.get("conversation", [])
     
     grades = get_grades_by_student(session["user_id"])
-    target_grade = next((g for g in grades if g["id"] == grade_id), None)
+    target_grade = next((g for g in grades if g["id"] == grade_id), None) if grade_id else None
     
-    if not target_grade:
-        return {"reply": "Grade not found."}, 404
-        
+    # Always allow chat – if no specific grade, use general context
     reply = generate_chat_reply(
-        session["user_name"], target_grade["subject"],
-        target_grade["score"], target_grade["letter_grade"],
-        target_grade["gpa_points"], target_grade["date"],
-        conversation, message
+        session["user_name"],
+        target_grade["subject"] if target_grade else None,
+        target_grade["score"] if target_grade else None,
+        target_grade["letter_grade"] if target_grade else None,
+        target_grade["gpa_points"] if target_grade else None,
+        target_grade["date"] if target_grade else None,
+        conversation,
+        message,
+        has_grades=len(grades) > 0
     )
     return {"reply": reply}
+
+@app.route("/api/my-grades")
+def api_my_grades():
+    if "user_id" not in session:
+        return {"grades": []}, 200
+    grades = get_grades_by_student(session["user_id"])
+    return {"grades": [{"id": g["id"], "subject": g["subject"], "score": g["score"], "letter_grade": g["letter_grade"]} for g in grades]}
 
 @app.route("/history")
 def history():
