@@ -1,6 +1,7 @@
-﻿<div align="center">
+<div align="center">
 
-<img src="static/logo.svg" width="80" alt="GradeEvaluator AI Logo" />
+<img src="static/logo.svg" width="80" 
+     alt="GradeEvaluator AI Logo" />
 
 # 🎓 GradeEvaluator AI
 
@@ -16,9 +17,9 @@
 
 <br/>
 
-🌐 **[Live Demo](https://grade-evaluator.onrender.com)** · 
-🐛 **[Report Bug](https://github.com/gemachistesfaye/GradeEvaluator AI/issues)** · 
-✨ **[Request Feature](https://github.com/gemachistesfaye/GradeEvaluator AI/issues)**
+🌐 **[Live Demo](https://grade-evaluator.onrender.com)** ·
+🐛 **[Report Bug](https://github.com/gemachistesfaye/GradeEvaluator-AI/issues)** ·
+✨ **[Request Feature](https://github.com/gemachistesfaye/GradeEvaluator-AI/issues)**
 
 </div>
 
@@ -26,13 +27,31 @@
 
 ## 🌟 Overview
 
-**GradeEvaluator AI** is a modern, full-stack academic performance tracker
-built for university students who want deep, AI-powered insights into
+**GradeEvaluator AI** is a modern, full-stack
+academic performance tracker built for university
+students who want deep, AI-powered insights into
 their academic trajectory.
 
-Enter your subject scores, get instant letter grades, track your
-weighted cumulative GPA across semesters, and chat with **GradeBot** —
-your personal AI academic coach powered by Google Gemini.
+Enter your subject scores, get instant letter
+grades, track your weighted cumulative GPA across
+semesters, and chat with **GradeBot** — your
+personal AI academic coach powered by Google Gemini.
+
+---
+
+## 📸 Screenshots
+
+| Dashboard & Analytics | GradeBot AI Chatbot |
+| :---: | :---: |
+| ![Dashboard](SCREENSHOT_1) | ![GradeBot](SCREENSHOT_2) |
+
+| Dark Mode | Grade History |
+| :---: | :---: |
+| ![Dark Mode](SCREENSHOT_3) | ![History](SCREENSHOT_4) |
+
+| Register Page | Landing Page |
+| :---: | :---: |
+| ![Register](SCREENSHOT_5) | ![Landing](SCREENSHOT_6) |
 
 ---
 
@@ -40,11 +59,11 @@ your personal AI academic coach powered by Google Gemini.
 
 | Feature | Description |
 |---|---|
-| 🤖 **GradeBot AI Chatbot** | Floating AI coach — ask study tips, get weekly plans, understand your GPA impact |
-| 📊 **Semester Dashboard** | Bar, pie, and line charts showing performance across all subjects |
-| ⭐ **Real Weighted GPA** | Calculates true cumulative GPA using credit hours per course |
-| 🌓 **Dark / Light / System Theme** | Three theme modes — saved automatically per device |
-| 📄 **PDF & CSV Export** | Download full grade transcripts as PDF or spreadsheet |
+| 🤖 **GradeBot AI Chatbot** | Floating AI coach — study tips, weekly plans, GPA impact |
+| 📊 **Semester Dashboard** | Bar, pie, and line charts across all subjects |
+| ⭐ **Real Weighted GPA** | True CGPA calculated using credit hours per course |
+| 🌓 **Dark / Light / System Theme** | Three theme modes saved automatically per device |
+| 📄 **PDF & CSV Export** | Download full grade transcripts anytime |
 | 🔐 **Secure Auth** | Register, login, change password with bcrypt hashing |
 | 📋 **Grade History** | Full searchable history with per-grade delete |
 | 🏫 **Semester Grouping** | Organize grades by semester, see SGPA per semester |
@@ -67,7 +86,7 @@ your personal AI academic coach powered by Google Gemini.
 | 40 – 49.9 | D | 1.5 |
 | Below 40 | F (NG) | 0.0 |
 
-> ⚠️ **F (NG) = No Grade.** Any F in a course results in
+> ⚠️ **F (NG) = No Grade.** Any F results in
 > NG status for that semester's GPA.
 
 ---
@@ -77,23 +96,23 @@ your personal AI academic coach powered by Google Gemini.
 | Layer | Technology |
 |---|---|
 | **Backend** | Python 3.11, Flask |
-| **Database** | SQLite (via built-in `sqlite3`) |
-| **AI** | Google Gemini API (`google-genai`) |
+| **Database** | SQLite (`sqlite3`) |
+| **AI** | Google Gemini API |
 | **Frontend** | HTML5, CSS3, Vanilla JavaScript |
 | **Charts** | Chart.js |
 | **Fonts** | Inter (Google Fonts) |
 | **PDF Export** | ReportLab |
 | **Auth** | Werkzeug password hashing |
-| **Deploy** | Render (via Procfile + gunicorn) |
+| **Deploy** | Render + gunicorn |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-GradeEvaluator AI/
+GradeEvaluator-AI/
 ├── app.py                 # Flask routes & core logic
-├── database.py            # SQLite database setup & queries
+├── database.py            # SQLite setup & queries
 ├── ai_feedback.py         # Google Gemini AI integration
 ├── export.py              # CSV & PDF export logic
 ├── run.py                 # App entry point
@@ -109,7 +128,7 @@ GradeEvaluator AI/
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── static/
 │   ├── style.css          # Global design system
-│   ├── chatbot.css        # Floating chatbot styles
+│   ├── chatbot.css        # Chatbot styles
 │   ├── charts.js          # Chart.js rendering
 │   ├── dashboard.js       # Dashboard UI logic
 │   └── logo.svg           # App logo
@@ -118,11 +137,11 @@ GradeEvaluator AI/
     ├── index.html         # Landing page
     ├── login.html         # Login page
     ├── register.html      # Register page
-    ├── dashboard.html     # Main app dashboard
-    ├── history.html       # Grade history table
-    ├── profile.html       # User profile & settings
+    ├── dashboard.html     # Main dashboard
+    ├── history.html       # Grade history
+    ├── profile.html       # User profile
     ├── settings.html      # App settings
-    └── notifications.html # Notifications center
+    └── notifications.html # Notifications
 ```
 
 ---
@@ -131,7 +150,6 @@ GradeEvaluator AI/
 
 ### Prerequisites
 - Python 3.8+
-- `pip` package manager
 - Google Gemini API key
   (free at [aistudio.google.com](https://aistudio.google.com/app/apikey))
 
@@ -139,19 +157,15 @@ GradeEvaluator AI/
 
 **1. Clone the repository:**
 ```bash
-git clone https://github.com/gemachistesfaye/GradeEvaluator AI.git
-cd GradeEvaluator AI
+git clone https://github.com/gemachistesfaye/GradeEvaluator-AI.git
+cd GradeEvaluator-AI
 ```
 
-**2. Create and activate virtual environment:**
+**2. Create virtual environment:**
 ```bash
 python -m venv venv
-
-# Windows:
-venv\Scripts\activate
-
-# macOS/Linux:
-source venv/bin/activate
+venv\Scripts\activate      # Windows
+source venv/bin/activate   # macOS/Linux
 ```
 
 **3. Install dependencies:**
@@ -159,7 +173,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**4. Create your `.env` file:**
+**4. Create `.env` file:**
 ```env
 FLASK_SECRET_KEY=your_secure_secret_key
 GEMINI_API_KEY=your_gemini_api_key_here
@@ -171,33 +185,13 @@ FLASK_ENV=development
 python run.py
 ```
 
-Open **http://localhost:5000** in your browser. 🎉
-
----
-
-## 📸 Screenshots
-
-| Dashboard | GradeBot AI Chat |
-| :---: | :---: |
-| <img src="PASTE_SCREENSHOT_1" width="400"/> | <img src="PASTE_SCREENSHOT_2" width="400"/> |
-
-| Dark Mode | Grade History |
-| :---: | :---: |
-| <img src="PASTE_SCREENSHOT_3" width="400"/> | <img src="PASTE_SCREENSHOT_4" width="400"/> |
-
-| Register Page | PDF Export |
-| :---: | :---: |
-| <img src="PASTE_SCREENSHOT_5" width="400"/> | <img src="PASTE_SCREENSHOT_6" width="400"/> |
-
-> 📸 To add screenshots: open any GitHub issue,
-> drag your screenshots into the comment box,
-> copy the generated URLs and paste above.
+Open **http://localhost:5000** 🎉
 
 ---
 
 ## 🌐 Deployment
 
-This app is deployed on **Render** using `gunicorn`:
+Deployed on **Render** using gunicorn:
 
 ```
 web: gunicorn app:app
@@ -210,20 +204,20 @@ Live at: **https://grade-evaluator.onrender.com**
 ## 📅 Changelog
 
 ### v2.0.0 — June 2026
-- 🤖 GradeBot AI floating chatbot (Google Gemini)
-- ⭐ Real weighted cumulative GPA calculator
-- 🏫 Semester grouping with SGPA per semester
-- 🌓 Dark / Light / System theme modes
-- 📈 Interactive Chart.js analytics (bar, pie, line)
+- 🤖 GradeBot AI floating chatbot
+- ⭐ Real weighted CGPA calculator
+- 🏫 Semester grouping with SGPA
+- 🌓 Dark / Light / System theme
+- 📈 Interactive Chart.js analytics
 - 💾 SQLite persistent database
-- 🔐 Full login / register / password change system
+- 🔐 Full auth system
 - 📄 PDF & CSV export
 - 🔔 Notifications center
 - ⚙️ Settings page
 
 ### v1.0.0 — August 2025
 - 🎉 Initial release
-- Basic score → letter grade conversion
+- Basic score to letter grade conversion
 - Simple Flask web UI
 - Deployed on Render
 
